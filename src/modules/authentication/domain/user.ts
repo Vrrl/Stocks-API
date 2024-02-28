@@ -1,11 +1,16 @@
 import { Entity } from '@src/core/domain/entity';
 
 export interface UserProps {
+  /**
+   * @atribute Id in the auth provider
+   */
   externalId: string;
+  /**
+   * @atribute name self attributed by the user
+   */
   username: string;
   email: string;
   emailVerified: boolean;
-  imageUrl?: string;
 }
 
 export class User extends Entity<UserProps> {
@@ -16,7 +21,6 @@ export class User extends Entity<UserProps> {
       username: this.props.username,
       email: this.props.email,
       emailVerified: this.props.emailVerified,
-      imageUrl: this.props.imageUrl,
     };
   }
 }
