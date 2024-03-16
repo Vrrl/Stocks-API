@@ -11,22 +11,11 @@ import { SignUpUseCase } from '@src/modules/authentication/use-cases/sign-up/sig
 import { SignUpConfirmUseCase } from '@src/modules/authentication/use-cases/sign-up-confirm/sign-up-confirm';
 import { SignUpResendVerificationCodeUseCase } from '@src/modules/authentication/use-cases/sign-up-resend-verification-code/sign-up-resend-verification-code';
 import { LogInUseCase } from '@src/modules/authentication/use-cases/log-in/log-in';
-import { IAnimalCommandRepository } from '@src/modules/animal/infra/repositories/animal-command-repository';
-import { AnimalCommandRepository } from '@src/modules/animal/infra/repositories/dynamo/animal-command-repository';
-import { ShelteredAnimalRegistrationUseCase } from '@src/modules/animal/use-cases/sheltered-animal-registration/sheltered-animal-registration';
-import { LostAnimalReportUseCase } from '@src/modules/animal/use-cases/lost-animal-report/lost-animal-report';
-import { LostAnimalClaimUseCase } from '@src/modules/animal/use-cases/lost-animal-claim/lost-animal-claim';
-import { AnimalQueryRepository } from '@src/modules/animal/infra/repositories/dynamo/animal-query-repository';
-import { AnimalListUseCase } from '@src/modules/animal/use-cases/animal-list/animal-list';
-import { ShelteredAnimalRequestAdoptionUseCase } from '@src/modules/animal/use-cases/sheltered-animal-request-adoption/sheltered-animal-request-adoption';
-import { AdoptionQueryRepository } from '@src/modules/animal/infra/repositories/dynamo/adoption-query-repository';
-import { AdoptionCommandRepository } from '@src/modules/animal/infra/repositories/dynamo/adoption-command-repository';
-import { PublicationCommandRepository } from '@src/modules/animal/infra/repositories/dynamo/publication-command-repository';
-import { PublicationQueryRepository } from '@src/modules/animal/infra/repositories/dynamo/publication-query-repository';
-import { AnimalFeedUseCase } from '@src/modules/animal/use-cases/animal-feed/animal-feed';
 import { S3Service } from '@src/infra/storage/s3/s3-service';
 import { IStorageService } from '@src/infra/storage/storage-service';
-import { AdoptionRequestsListUseCase } from '@src/modules/animal/use-cases/adoptions-requests-list/adoption-requests-list';
+import { IOrderCommandRepository } from '@src/modules/order-management-system/infra/order-command-repository';
+import { OrderCommandRepository } from '@src/modules/order-management-system/infra/dynamo/order-command-repository';
+import { OrderRegistrationUseCase } from '@src/modules/order-management-system/use-cases/order-registration/order-registration';
 
 const container = new Container();
 
@@ -44,12 +33,7 @@ container.bind<IAuthenticationService>(TYPES.IAuthenticationService).to(CognitoS
 container.bind<IStorageService>(TYPES.IStorageService).to(S3Service);
 
 // Repos
-container.bind<IAnimalCommandRepository>(TYPES.IAnimalCommandRepository).to(AnimalCommandRepository);
-container.bind<AnimalQueryRepository>(TYPES.IAnimalQueryRepository).to(AnimalQueryRepository);
-container.bind<AdoptionQueryRepository>(TYPES.IAdoptionQueryRepository).to(AdoptionQueryRepository);
-container.bind<AdoptionCommandRepository>(TYPES.IAdoptionCommandRepository).to(AdoptionCommandRepository);
-container.bind<PublicationCommandRepository>(TYPES.IPublicationCommandRepository).to(PublicationCommandRepository);
-container.bind<PublicationQueryRepository>(TYPES.IPublicationQueryRepository).to(PublicationQueryRepository);
+container.bind<IOrderCommandRepository>(TYPES.IOrderCommandRepository).to(OrderCommandRepository);
 
 // UseCases
 container.bind<SignUpUseCase>(TYPES.SignUpUseCase).to(SignUpUseCase);
@@ -59,16 +43,6 @@ container
   .to(SignUpResendVerificationCodeUseCase);
 container.bind<LogInUseCase>(TYPES.LogInUseCase).to(LogInUseCase);
 
-container
-  .bind<ShelteredAnimalRegistrationUseCase>(TYPES.ShelteredAnimalRegistrationUseCase)
-  .to(ShelteredAnimalRegistrationUseCase);
-container.bind<LostAnimalReportUseCase>(TYPES.LostAnimalReportUseCase).to(LostAnimalReportUseCase);
-container.bind<LostAnimalClaimUseCase>(TYPES.LostAnimalClaimUseCase).to(LostAnimalClaimUseCase);
-container.bind<AnimalListUseCase>(TYPES.AnimalListUseCase).to(AnimalListUseCase);
-container
-  .bind<ShelteredAnimalRequestAdoptionUseCase>(TYPES.ShelteredAnimalRequestAdoptionUseCase)
-  .to(ShelteredAnimalRequestAdoptionUseCase);
-container.bind<AnimalFeedUseCase>(TYPES.AnimalFeedUseCase).to(AnimalFeedUseCase);
-container.bind<AdoptionRequestsListUseCase>(TYPES.AdoptionRequestsListUseCase).to(AdoptionRequestsListUseCase);
+container.bind<OrderRegistrationUseCase>(TYPES.OrderRegistrationUseCase).to(OrderRegistrationUseCase);
 
 export default container;
