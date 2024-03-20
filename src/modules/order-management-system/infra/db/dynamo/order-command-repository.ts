@@ -2,7 +2,7 @@ import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import { Order } from '../../domain/order';
+import { Order } from '../../../domain/order';
 import { IOrderCommandRepository } from '../order-command-repository';
 import { throwIfUndefinedOrEmptyString } from '@src/core/infra/helpers/validation';
 

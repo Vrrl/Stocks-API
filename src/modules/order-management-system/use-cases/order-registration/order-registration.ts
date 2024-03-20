@@ -6,7 +6,9 @@ import { v4 as uuid } from 'uuid';
 import { OrderStatusEnum } from '../../domain/order-status-enum';
 import { OrderTypeEnum } from '../../domain/order-type-enum';
 import { OrderExpirationTypeEnum } from '../../domain/order-expiration-type-enum';
-import { IOrderCommandRepository } from '../../infra/order-command-repository';
+import { IOrderCommandRepository } from '../../infra/db/order-command-repository';
+import { IEventNotifier } from '../../infra/event/event-notifier';
+import { EventNames } from '../../domain/event-names';
 
 interface OrderRegistrationRequest {
   investorId: string;
@@ -24,6 +26,8 @@ export class OrderRegistrationUseCase implements IUseCase<OrderRegistrationReque
   constructor(
     @inject(TYPES.IOrderCommandRepository)
     private readonly orderCommandRepository: IOrderCommandRepository,
+    @inject(TYPES.IEventNotifier)
+    private readonly eventNotifier: IEventNotifier,
   ) {}
 
   async execute({
@@ -51,5 +55,7 @@ export class OrderRegistrationUseCase implements IUseCase<OrderRegistrationReque
     );
 
     await this.orderCommandRepository.save(newOrder);
+
+    await this.eventNotifier.notifyWithBody(EventNames.OrderCreated, newOrder.toJson());
   }
 }

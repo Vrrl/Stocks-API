@@ -13,20 +13,25 @@ import { SignUpResendVerificationCodeUseCase } from '@src/modules/authentication
 import { LogInUseCase } from '@src/modules/authentication/use-cases/log-in/log-in';
 import { S3Service } from '@src/infra/storage/s3/s3-service';
 import { IStorageService } from '@src/infra/storage/storage-service';
-import { IOrderCommandRepository } from '@src/modules/order-management-system/infra/order-command-repository';
-import { OrderCommandRepository } from '@src/modules/order-management-system/infra/dynamo/order-command-repository';
+import { IOrderCommandRepository } from '@src/modules/order-management-system/infra/db/order-command-repository';
+import { OrderCommandRepository } from '@src/modules/order-management-system/infra/db/dynamo/order-command-repository';
 import { OrderRegistrationUseCase } from '@src/modules/order-management-system/use-cases/order-registration/order-registration';
+import { IEventNotifier } from '@src/modules/order-management-system/infra/event/event-notifier';
+import { EventNotifier } from '@src/modules/order-management-system/infra/event/sns/event-notifier';
+import { SNSClient } from '@aws-sdk/client-sns';
 
 const container = new Container();
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
 const s3Client = new S3Client({ region: process.env.REGION });
+const snsClient = new SNSClient({ region: process.env.REGION });
 const cognitoIdentityProvider = new CognitoIdentityProvider({ region: process.env.REGION });
 
 // Resources
 container.bind<S3Client>(TYPES.S3Client).toConstantValue(s3Client);
 container.bind<DynamoDBClient>(TYPES.DynamoDBClient).toConstantValue(dynamoDb);
 container.bind<CognitoIdentityProvider>(TYPES.CognitoIdentityProvider).toConstantValue(cognitoIdentityProvider);
+container.bind<SNSClient>(TYPES.SNSClient).toConstantValue(snsClient);
 
 // Services
 container.bind<IAuthenticationService>(TYPES.IAuthenticationService).to(CognitoService);
@@ -34,6 +39,8 @@ container.bind<IStorageService>(TYPES.IStorageService).to(S3Service);
 
 // Repos
 container.bind<IOrderCommandRepository>(TYPES.IOrderCommandRepository).to(OrderCommandRepository);
+
+container.bind<IEventNotifier>(TYPES.IEventNotifier).to(EventNotifier);
 
 // UseCases
 container.bind<SignUpUseCase>(TYPES.SignUpUseCase).to(SignUpUseCase);

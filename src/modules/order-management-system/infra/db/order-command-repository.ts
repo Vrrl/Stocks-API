@@ -1,4 +1,4 @@
-import { Order } from '../domain/order';
+import { Order } from '../../domain/order';
 
 export interface IOrderCommandRepository {
   // hardDeleteRequest(id: string): Promise<void>;

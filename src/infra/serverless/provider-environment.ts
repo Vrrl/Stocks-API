@@ -7,3 +7,4 @@ export const DYNAMO_ADOPTION_TABLE = `adoptions-${STAGE}`;
 export const DYNAMO_PUBLICATION_TABLE = `publications-${STAGE}`;
 export const COGNITO_USER_POOL_ID = `us-east-1_sFRX8TM0H`;
 export const COGNITO_CLIENT_ID = `4gf66pspl04schdkujdcnq2m8b`;
+export const SNS_ORDER_TOPIC = `mudar`;
