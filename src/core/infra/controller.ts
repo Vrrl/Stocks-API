@@ -27,7 +27,7 @@ export abstract class Controller {
     }
   }
 
-  abstract get requestSchema(): z.AnyZodObject;
+  abstract get requestSchema(): z.AnyZodObject | undefined;
   abstract perform(httpRequest: HttpRequest, context?: ControllerContext): Promise<HttpResponse>;
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {

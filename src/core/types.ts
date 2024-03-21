@@ -9,6 +9,7 @@ const TYPES = {
   IStorageService: Symbol.for('IStorageService'),
   // Repos
   IOrderCommandRepository: Symbol.for('IOrderCommandRepository'),
+  IOrderQueryRepository: Symbol.for('IOrderQueryRepository'),
 
   IEventNotifier: Symbol.for('IEventNotifier'),
   // UseCases
@@ -17,6 +18,7 @@ const TYPES = {
   SignUpResendVerificationCodeUseCase: Symbol.for('SignUpResendVerificationCodeUseCase'),
   LogInUseCase: Symbol.for('LogInUseCase'),
   OrderRegistrationUseCase: Symbol.for('OrderRegistrationUseCase'),
+  OrderListUseCase: Symbol.for('OrderListUseCase'),
 };
 
 export default TYPES;
