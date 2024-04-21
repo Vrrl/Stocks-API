@@ -17,6 +17,12 @@ export class Router {
   rawRoutes: route[];
   prefix: string;
 
+  static fromRouters(prefix: string = '', routers: Router[]) {
+    const newRouter = new Router(prefix);
+    newRouter.useRouters(routers);
+    return newRouter;
+  }
+
   private joinPaths(head: string, tail: string): string {
     const normalizedHead = head.endsWith('/') ? head : head + '/';
     const normalizedTail = tail.startsWith('/') ? tail.substring(1) : tail;
@@ -60,7 +66,7 @@ export class Router {
     this.addRoute({ method: 'PATCH', path, controller });
   }
 
-  useRouter(routers: Router[]): void {
+  useRouters(routers: Router[]): void {
     routers.map(router => {
       router.routes.map(route => {
         this.addRoute(route);

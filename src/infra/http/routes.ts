@@ -4,7 +4,7 @@ import { v1router as AuthenticationRouterV1 } from '@modules/authentication/rout
 
 const router = new Router();
 
-router.useRouter([OrderManagementSystemRouterV1]);
-router.useRouter([AuthenticationRouterV1]);
+router.useRouters([OrderManagementSystemRouterV1]);
+router.useRouters([AuthenticationRouterV1]);
 
 export default router;

@@ -1,0 +1,3 @@
+services:
+  order-management:
+    path: src/modules/order-management
