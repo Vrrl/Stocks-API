@@ -4,7 +4,7 @@ import * as httpStatus from '@src/core/infra/helpers/http-status';
 import { HttpRequest, HttpResponse } from '@core/infra/http';
 import { Controller } from '@core/infra/controller';
 import { SignUpResendVerificationCodeUseCase as SignUpResendVerificationCodeUseCase } from './sign-up-resend-verification-code';
-import TYPES from '@src/core/types';
+import TYPES from '@src/modules/order-management/infra/types';
 import { AuthenticationLevel } from '@src/core/infra/authentication/authentication-level';
 
 @injectable()

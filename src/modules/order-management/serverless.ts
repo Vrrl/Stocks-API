@@ -1,7 +1,7 @@
 import type { AWS } from '@serverless/typescript';
-// import functions from '@src/modules/order-management/infra/serverless/functions';
+import functions from '@src/modules/order-management/infra/serverless/functions';
 import iam from '@src/modules/order-management/infra/serverless/iam';
-// import resources from '@src/modules/order-management/infra/serverless/resources';
+import resources from '@src/modules/order-management/infra/serverless/resources';
 import * as environment from '@src/modules/order-management/infra/serverless/provider-environment';
 
 const serverlessConfiguration: AWS = {
@@ -24,20 +24,8 @@ const serverlessConfiguration: AWS = {
     environment,
     iam,
   },
-  functions: {
-    hello: {
-      handler: 'handler.hello',
-      events: [
-        {
-          http: {
-            path: 'hello',
-            method: 'get',
-          },
-        },
-      ],
-    },
-  },
-  // resources,
+  functions,
+  resources,
   package: { individually: true },
   custom: {
     yarn: {
@@ -57,4 +45,4 @@ const serverlessConfiguration: AWS = {
   },
 };
 
-export default serverlessConfiguration;
+module.exports = serverlessConfiguration;

@@ -1,4 +1,4 @@
-import container from '@core/injector';
+import container from '@src/modules/order-management/infra/injector';
 import { Router } from '@core/infra/router';
 import { OrderRegistrationController } from '../../use-cases/order-registration/order-registration-controller';
 

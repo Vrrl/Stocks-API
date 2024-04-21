@@ -4,9 +4,9 @@ import { HttpException } from '@src/core/infra/errors/http';
 import { z } from 'zod';
 import { injectable, inject } from 'inversify';
 import { AuthenticationLevel } from './authentication/authentication-level';
-import TYPES from '../types';
+import TYPES from '../../modules/order-management/infra/types';
 import { IAuthenticationService } from '@src/infra/authentication/services/authentication-service';
-import container from '../injector';
+import container from '../../modules/order-management/infra/injector';
 import { User } from '@src/modules/authentication/domain/user';
 
 export type ControllerContext = { user?: User };

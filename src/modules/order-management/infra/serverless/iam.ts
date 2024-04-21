@@ -14,47 +14,7 @@ const IAM: AWS['provider']['iam'] = {
           'dynamodb:DeleteItem',
           'dynamodb:BatchGetItem',
         ],
-        Resource: 'arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMO_ANIMAL_TABLE}',
-      },
-      {
-        Effect: 'Allow',
-        Action: [
-          'dynamodb:Query',
-          'dynamodb:Scan',
-          'dynamodb:GetItem',
-          'dynamodb:PutItem',
-          'dynamodb:UpdateItem',
-          'dynamodb:DeleteItem',
-          'dynamodb:BatchGetItem',
-        ],
-        Resource: 'arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMO_PUBLICATION_TABLE}',
-      },
-      {
-        Effect: 'Allow',
-        Action: [
-          'dynamodb:Query',
-          'dynamodb:Scan',
-          'dynamodb:GetItem',
-          'dynamodb:PutItem',
-          'dynamodb:UpdateItem',
-          'dynamodb:DeleteItem',
-          'dynamodb:BatchGetItem',
-        ],
-        Resource: 'arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMO_ADOPTION_TABLE}',
-      },
-      {
-        Effect: 'Allow',
-        Action: [
-          'dynamodb:Query',
-          'dynamodb:Scan',
-          'dynamodb:GetItem',
-          'dynamodb:PutItem',
-          'dynamodb:UpdateItem',
-          'dynamodb:DeleteItem',
-          'dynamodb:BatchGetItem',
-        ],
-        Resource:
-          'arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMO_ADOPTION_TABLE}/index/RequesterIndex',
+        Resource: 'arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMO_ORDERS_TABLE}',
       },
       {
         Effect: 'Allow',

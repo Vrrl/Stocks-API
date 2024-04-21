@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { ok } from '@src/core/infra/helpers/http-status';
 import { HttpRequest, HttpResponse } from '@core/infra/http';
 import { Controller, ControllerContext } from '@core/infra/controller';
-import TYPES from '@src/core/types';
+import TYPES from '@src/modules/order-management/infra/types';
 import { AuthenticationLevel } from '@src/core/infra/authentication/authentication-level';
 import { User } from '@src/modules/authentication/domain/user';
 import { OrderListUseCase } from './order-list';

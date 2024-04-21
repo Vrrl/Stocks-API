@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { IAuthenticationService } from '../authentication-service';
-import TYPES from '@src/core/types';
+import TYPES from '@src/modules/order-management/infra/types';
 import {
   CognitoIdentityProvider,
   ConfirmSignUpCommandInput,
@@ -134,7 +134,6 @@ export class CognitoService implements IAuthenticationService {
         emailVerified: throwIfNotBoolean(userResponse.UserAttributes?.find(x => x.Name === 'email_verified')?.Value),
         username: throwIfUndefinedOrEmptyString(userResponse.Username),
         externalId: throwIfUndefinedOrEmptyString(userResponse.UserAttributes?.find(x => x.Name === 'sub')?.Value),
-        imageUrl: userResponse.UserAttributes?.find(x => x.Name === 'custom:imageUrl')?.Value,
       },
       throwIfUndefinedOrEmptyString(userResponse.UserAttributes?.find(x => x.Name === 'custom:internalId')?.Value),
     );
@@ -147,7 +146,6 @@ export class CognitoService implements IAuthenticationService {
         emailVerified: throwIfNotBoolean(user.Attributes?.find(x => x.Name === 'email_verified')?.Value),
         username: throwIfUndefinedOrEmptyString(user.Username),
         externalId: throwIfUndefinedOrEmptyString(user.Attributes?.find(x => x.Name === 'sub')?.Value),
-        imageUrl: user.Attributes?.find(x => x.Name === 'custom:imageUrl')?.Value,
       },
       throwIfUndefinedOrEmptyString(user.Attributes?.find(x => x.Name === 'custom:internalId')?.Value),
     );

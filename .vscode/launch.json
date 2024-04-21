@@ -2,11 +2,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Severless local",
+      "name": "Severless local Order Management",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "yarn",
-      "args": ["local"],
+      "args": ["local:order-management"],
       "autoAttachChildProcesses": true,
       "sourceMaps": true,
       "skipFiles": ["<node_internals>/**"],

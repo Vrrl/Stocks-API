@@ -4,8 +4,8 @@
   "description": "",
   "main": "serverless.ts",
   "scripts": {
-    "deploy:all": "serverless deploy",
-    "local:all": "sls offline start --stage local --config serverless-order-management.ts --httpPort 4001 -t",
+    "deploy:all": "sls deploy",
+    "local:order-management": "sls order-management:offline --stage local --httpPort 4001 -t",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
@@ -24,7 +24,7 @@
     "@middy/http-router": "^4.7",
     "@middy/validator": "^4.7",
     "date-fns": "^3.3.1",
-    "inversify": "^6.0.1",
+    "inversify": "^6.0.2",
     "inversify-binding-decorators": "^4.0.0",
     "reflect-metadata": "^0.2.1",
     "serverless-http": "^3.2.0",
