@@ -1,4 +1,3 @@
-import { inject, injectable } from 'inversify';
 import { IAuthenticationService } from '../authentication-service';
 import TYPES from '@src/modules/order-management/infra/types';
 import {
@@ -15,6 +14,7 @@ import {
 import { throwIfNotBoolean, throwIfUndefinedOrEmptyString } from '@src/core/infra/helpers/validation';
 import { User } from '@src/modules/authentication/domain/user';
 import { IOAuthToken } from '@src/modules/authentication/dtos/oauth-token';
+import { inject, injectable } from 'inversify/lib/inversify';
 
 @injectable()
 export class CognitoService implements IAuthenticationService {
@@ -24,7 +24,7 @@ export class CognitoService implements IAuthenticationService {
   constructor(
     @inject(TYPES.CognitoIdentityProvider) private readonly cognitoIdentityProvider: CognitoIdentityProvider,
   ) {
-    // Only if variables have been setup already
+    // Only if variables have been setup already #TODO: remover isso, ja arrumei
     if (process.env.NODE_ENV) {
       this.USER_POOL_ID = throwIfUndefinedOrEmptyString(process.env.COGNITO_USER_POOL_ID);
       this.CLIENT_ID = throwIfUndefinedOrEmptyString(process.env.COGNITO_CLIENT_ID);

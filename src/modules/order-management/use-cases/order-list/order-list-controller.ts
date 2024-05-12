@@ -1,4 +1,3 @@
-import { inject, injectable } from 'inversify';
 import { z } from 'zod';
 import { ok } from '@src/core/infra/helpers/http-status';
 import { HttpRequest, HttpResponse } from '@core/infra/http';
@@ -7,6 +6,7 @@ import TYPES from '@src/modules/order-management/infra/types';
 import { AuthenticationLevel } from '@src/core/infra/authentication/authentication-level';
 import { User } from '@src/modules/authentication/domain/user';
 import { OrderListUseCase } from './order-list';
+import { inject, injectable } from 'inversify/lib/inversify';
 
 @injectable()
 export class OrderListController extends Controller {

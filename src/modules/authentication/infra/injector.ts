@@ -20,9 +20,6 @@ import { EventNotifier } from '@src/modules/order-management/infra/event/sns/eve
 import { SNSClient } from '@aws-sdk/client-sns';
 import * as providerEnv from '@modules/order-management/infra/serverless/provider-environment';
 import { loadEnvFromDictionary } from '@src/core/utils/loadEnvFromDictionary';
-import { OrderListUseCase } from '../use-cases/order-list/order-list';
-import { IOrderQueryRepository } from './db/order-query-repository';
-import { OrderQueryRepository } from './db/dynamo/order-query-repository';
 
 loadEnvFromDictionary(providerEnv);
 
@@ -44,13 +41,7 @@ container.bind<IAuthenticationService>(TYPES.IAuthenticationService).to(CognitoS
 container.bind<IStorageService>(TYPES.IStorageService).to(S3Service);
 
 // Repos
-container.bind<IOrderCommandRepository>(TYPES.IOrderCommandRepository).to(OrderCommandRepository);
-container.bind<IOrderQueryRepository>(TYPES.IOrderQueryRepository).to(OrderQueryRepository);
-
-container.bind<IEventNotifier>(TYPES.IEventNotifier).to(EventNotifier);
 
 // UseCases
-container.bind<OrderRegistrationUseCase>(TYPES.OrderRegistrationUseCase).to(OrderRegistrationUseCase);
-container.bind<OrderListUseCase>(TYPES.OrderListUseCase).to(OrderListUseCase);
 
 export default container;

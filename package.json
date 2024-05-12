@@ -6,6 +6,7 @@
   "scripts": {
     "deploy:all": "sls deploy",
     "local:order-management": "sls order-management:offline --stage local --httpPort 4001 -t",
+    "local:account-management": "sls account-management:offline --stage local --httpPort 4001 -t",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },

@@ -19,7 +19,7 @@ export class OrderRegistrationController extends Controller {
     super();
   }
 
-  authenticationLevels: AuthenticationLevel[] = [];
+  authenticationLevels: AuthenticationLevel[] = [AuthenticationLevel.basicUser];
 
   get requestSchema(): z.AnyZodObject {
     return z.object({
