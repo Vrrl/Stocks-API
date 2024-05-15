@@ -22,18 +22,11 @@
     "noImplicitReturns": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "composite": true,
+    "composite": true
   },
-  "include": ["src/**/*.ts", "serverless.ts"],
-  "exclude": [
-    "./dist",
-    "node_modules/**/*",
-    ".serverless/**/*",
-    ".webpack/**/*",
-    "_warmup/**/*",
-    ".vscode/**/*"
-  ],
-    "ts-node": {
-      "require": ["tsconfig-paths/register"]
-    }
+  "include": ["src/**/*.ts", "src/modules/order-management/serverless.ts"],
+  "exclude": ["./dist", "node_modules/**/*", ".serverless/**/*", ".webpack/**/*", "_warmup/**/*", ".vscode/**/*"],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }

@@ -1,4 +1,3 @@
-import { inject, injectable } from 'inversify';
 import { IAuthenticationService } from '../authentication-service';
 import TYPES from '@src/core/types';
 import {
@@ -13,8 +12,9 @@ import {
   UserType,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { throwIfNotBoolean, throwIfUndefinedOrEmptyString } from '@src/core/infra/helpers/validation';
-import { User } from '@src/modules/authentication/domain/user';
-import { IOAuthToken } from '@src/modules/authentication/dtos/oauth-token';
+import { inject, injectable } from 'inversify/lib/inversify';
+import { IOAuthToken } from '../../dtos/oauth-token';
+import { User } from '@src/infra/authentication/domain/user';
 
 @injectable()
 export class CognitoService implements IAuthenticationService {
@@ -24,7 +24,7 @@ export class CognitoService implements IAuthenticationService {
   constructor(
     @inject(TYPES.CognitoIdentityProvider) private readonly cognitoIdentityProvider: CognitoIdentityProvider,
   ) {
-    // Only if variables have been setup already
+    // Only if variables have been setup already #TODO: remover isso, ja arrumei
     if (process.env.NODE_ENV) {
       this.USER_POOL_ID = throwIfUndefinedOrEmptyString(process.env.COGNITO_USER_POOL_ID);
       this.CLIENT_ID = throwIfUndefinedOrEmptyString(process.env.COGNITO_CLIENT_ID);
@@ -134,7 +134,6 @@ export class CognitoService implements IAuthenticationService {
         emailVerified: throwIfNotBoolean(userResponse.UserAttributes?.find(x => x.Name === 'email_verified')?.Value),
         username: throwIfUndefinedOrEmptyString(userResponse.Username),
         externalId: throwIfUndefinedOrEmptyString(userResponse.UserAttributes?.find(x => x.Name === 'sub')?.Value),
-        imageUrl: userResponse.UserAttributes?.find(x => x.Name === 'custom:imageUrl')?.Value,
       },
       throwIfUndefinedOrEmptyString(userResponse.UserAttributes?.find(x => x.Name === 'custom:internalId')?.Value),
     );
@@ -147,7 +146,6 @@ export class CognitoService implements IAuthenticationService {
         emailVerified: throwIfNotBoolean(user.Attributes?.find(x => x.Name === 'email_verified')?.Value),
         username: throwIfUndefinedOrEmptyString(user.Username),
         externalId: throwIfUndefinedOrEmptyString(user.Attributes?.find(x => x.Name === 'sub')?.Value),
-        imageUrl: user.Attributes?.find(x => x.Name === 'custom:imageUrl')?.Value,
       },
       throwIfUndefinedOrEmptyString(user.Attributes?.find(x => x.Name === 'custom:internalId')?.Value),
     );

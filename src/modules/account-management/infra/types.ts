@@ -6,19 +6,15 @@ const TYPES = {
   CognitoIdentityProvider: Symbol.for('CognitoIdentityProvider'),
   // Services
   IAuthenticationService: Symbol.for('IAuthenticationService'),
-  IStorageService: Symbol.for('IStorageService'),
   // Repos
   IOrderCommandRepository: Symbol.for('IOrderCommandRepository'),
   IOrderQueryRepository: Symbol.for('IOrderQueryRepository'),
 
-  IEventNotifier: Symbol.for('IEventNotifier'),
   // UseCases
   SignUpUseCase: Symbol.for('SignUpUseCase'),
   SignUpConfirmUseCase: Symbol.for('SignUpConfirmUseCase'),
   SignUpResendVerificationCodeUseCase: Symbol.for('SignUpResendVerificationCodeUseCase'),
   LogInUseCase: Symbol.for('LogInUseCase'),
-  OrderRegistrationUseCase: Symbol.for('OrderRegistrationUseCase'),
-  OrderListUseCase: Symbol.for('OrderListUseCase'),
 };
 
 export default TYPES;

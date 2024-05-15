@@ -2,12 +2,12 @@ import { HttpRequest, HttpResponse } from '@core/infra/http';
 import * as httpStatus from './helpers/http-status';
 import { HttpException } from '@src/core/infra/errors/http';
 import { z } from 'zod';
-import { injectable, inject } from 'inversify';
+import { injectable } from 'inversify';
 import { AuthenticationLevel } from './authentication/authentication-level';
 import TYPES from '../types';
 import { IAuthenticationService } from '@src/infra/authentication/services/authentication-service';
-import container from '../injector';
-import { User } from '@src/modules/authentication/domain/user';
+import container from '../../modules/order-management/infra/injector';
+import { User } from '@src/infra/authentication/domain/user';
 
 export type ControllerContext = { user?: User };
 
@@ -27,7 +27,7 @@ export abstract class Controller {
     }
   }
 
-  abstract get requestSchema(): z.AnyZodObject;
+  abstract get requestSchema(): z.AnyZodObject | undefined;
   abstract perform(httpRequest: HttpRequest, context?: ControllerContext): Promise<HttpResponse>;
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
