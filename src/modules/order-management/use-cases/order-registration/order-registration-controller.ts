@@ -4,11 +4,11 @@ import { HttpRequest, HttpResponse } from '@core/infra/http';
 import { Controller, ControllerContext } from '@core/infra/controller';
 import TYPES from '@src/core/types';
 import { AuthenticationLevel } from '@src/core/infra/authentication/authentication-level';
-import { User } from '@src/modules/authentication/domain/user';
 import { OrderRegistrationUseCase } from './order-registration';
 import { OrderExpirationTypeSchema } from '../../domain/order-expiration-type-enum';
 import { OrderTypeSchema } from '../../domain/order-type-enum';
 import { inject, injectable } from 'inversify/lib/inversify';
+import { User } from '@src/infra/authentication/domain/user';
 
 @injectable()
 export class OrderRegistrationController extends Controller {
