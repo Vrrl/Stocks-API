@@ -1,15 +1,15 @@
 import { inject, injectable } from 'inversify';
 import { z } from 'zod';
-import * as httpStatus from '@src/core/infra/helpers/http-status';
+import { created } from '@src/core/infra/helpers/http-status';
 import { HttpRequest, HttpResponse } from '@core/infra/http';
 import { Controller } from '@core/infra/controller';
-import { SignUpConfirmUseCase } from './sign-up-confirm';
-import TYPES from '@src/modules/order-management/infra/types';
+import { SignUpUseCase } from './sign-up';
+import TYPES from '@src/core/types';
 import { AuthenticationLevel } from '@src/core/infra/authentication/authentication-level';
 
 @injectable()
-export class SignUpConfirmController extends Controller {
-  constructor(@inject(TYPES.SignUpConfirmUseCase) private readonly signUpConfirmUseCase: SignUpConfirmUseCase) {
+export class SignUpController extends Controller {
+  constructor(@inject(TYPES.SignUpUseCase) private readonly signUpUseCase: SignUpUseCase) {
     super();
   }
 
@@ -18,20 +18,22 @@ export class SignUpConfirmController extends Controller {
   get requestSchema(): z.AnyZodObject {
     return z.object({
       body: z.object({
-        confirmationCode: z.string(),
+        email: z.string(),
+        password: z.string(),
         username: z.string(),
       }),
     });
   }
 
   async perform(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const { username, confirmationCode } = httpRequest.body;
+    const { email, password, username } = httpRequest.body;
 
-    await this.signUpConfirmUseCase.execute({
+    await this.signUpUseCase.execute({
+      email,
+      password,
       username,
-      confirmationCode,
     });
 
-    return httpStatus.ok();
+    return created();
   }
 }

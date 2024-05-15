@@ -1,8 +1,8 @@
 import type { AWS } from '@serverless/typescript';
-import functions from '@src/modules/order-management/infra/serverless/functions';
-import iam from '@src/modules/order-management/infra/serverless/iam';
-import resources from '@src/modules/order-management/infra/serverless/resources';
-import * as environment from '@src/modules/order-management/infra/serverless/provider-environment';
+import functions from '@src/modules/account-management/infra/serverless/functions';
+import iam from '@src/modules/account-management/infra/serverless/iam';
+import resources from '@src/modules/account-management/infra/serverless/resources';
+import * as environment from '@src/modules/account-management/infra/serverless/provider-environment';
 
 const serverlessConfiguration: AWS = {
   service: 'AccountManagementAPI',

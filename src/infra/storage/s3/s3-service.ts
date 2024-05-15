@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { IStorageService } from '../storage-service';
-import TYPES from '@src/modules/order-management/infra/types';
+import TYPES from '@src/core/types';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 @injectable()

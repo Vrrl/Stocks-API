@@ -1,5 +1,5 @@
-import { User } from '@src/modules/authentication/domain/user';
-import { IOAuthToken } from '@src/modules/authentication/dtos/oauth-token';
+import { User } from '@src/infra/authentication/domain/user';
+import { IOAuthToken } from '../dtos/oauth-token';
 
 export interface IAuthenticationService {
   getUserByToken(token: string): Promise<User | undefined>;

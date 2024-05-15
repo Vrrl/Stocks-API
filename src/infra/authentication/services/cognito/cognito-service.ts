@@ -1,5 +1,5 @@
 import { IAuthenticationService } from '../authentication-service';
-import TYPES from '@src/modules/order-management/infra/types';
+import TYPES from '@src/core/types';
 import {
   CognitoIdentityProvider,
   ConfirmSignUpCommandInput,
@@ -12,9 +12,9 @@ import {
   UserType,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { throwIfNotBoolean, throwIfUndefinedOrEmptyString } from '@src/core/infra/helpers/validation';
-import { User } from '@src/modules/authentication/domain/user';
-import { IOAuthToken } from '@src/modules/authentication/dtos/oauth-token';
 import { inject, injectable } from 'inversify/lib/inversify';
+import { IOAuthToken } from '../../dtos/oauth-token';
+import { User } from '@src/infra/authentication/domain/user';
 
 @injectable()
 export class CognitoService implements IAuthenticationService {

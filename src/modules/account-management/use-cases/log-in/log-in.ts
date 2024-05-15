@@ -1,8 +1,8 @@
-import TYPES from '@src/modules/order-management/infra/types';
+import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { IUseCase } from '@src/core/use-case';
 import { IAuthenticationService } from '@src/infra/authentication/services/authentication-service';
-import { IOAuthToken } from '../../dtos/oauth-token';
+import { IOAuthToken } from '../../../../infra/authentication/dtos/oauth-token';
 
 interface LogInRequest {
   username: string;

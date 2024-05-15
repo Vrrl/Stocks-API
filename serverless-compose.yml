@@ -1,5 +1,5 @@
 services:
   account-management:
-    path: src/modules/authentication
+    path: src/modules/account-management
   order-management:
     path: src/modules/order-management

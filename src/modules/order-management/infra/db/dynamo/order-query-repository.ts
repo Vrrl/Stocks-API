@@ -1,4 +1,4 @@
-import TYPES from '@src/modules/order-management/infra/types';
+import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { Order } from '../../../domain/order';

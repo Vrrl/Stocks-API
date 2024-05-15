@@ -13,7 +13,7 @@ const resources: AWS['resources'] = {
     CognitoUserPoolClient: {
       Type: 'AWS::Cognito::UserPoolClient',
       Properties: {
-        ClientName: '${self:provider.stage}-user-pool-client',
+        ClientName: '${self:provider.environment.STAGE}-user-pool-client',
         UserPoolId: {
           Ref: 'CognitoUserPool',
         },
