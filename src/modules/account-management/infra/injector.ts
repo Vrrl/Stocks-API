@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import TYPES from './types';
-import * as providerEnv from '@modules/order-management/infra/serverless/provider-environment';
+import * as providerEnv from '@modules/account-management/infra/serverless/provider-environment';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { S3Client } from '@aws-sdk/client-s3';
 import { CognitoIdentityProvider } from '@aws-sdk/client-cognito-identity-provider';

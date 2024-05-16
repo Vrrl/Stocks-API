@@ -34,9 +34,9 @@ const serverlessConfiguration: AWS = {
     esbuild: {
       bundle: true,
       minify: false,
-      sourcemap: false,
+      sourcemap: true,
       exclude: ['aws-sdk'],
-      target: 'node16',
+      target: 'node16', //#TODO mover pra 20 e testar
       define: { 'require.resolve': undefined },
       platform: 'node',
       concurrency: 10,

@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Severless local Order Management",
+      "name": "Serverless local Order Management",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "yarn",
@@ -13,7 +13,7 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "Severless local Account Management",
+      "name": "Serverless local Account Management",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "yarn",

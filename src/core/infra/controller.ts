@@ -6,8 +6,8 @@ import { injectable } from 'inversify';
 import { AuthenticationLevel } from './authentication/authentication-level';
 import TYPES from '../types';
 import { IAuthenticationService } from '@src/infra/authentication/services/authentication-service';
-import container from '../../modules/order-management/infra/injector';
 import { User } from '@src/infra/authentication/domain/user';
+import container from '@src/modules/account-management/infra/injector';
 
 export type ControllerContext = { user?: User };
 
