@@ -13,7 +13,7 @@ import { EventNames } from '../../domain/event-names';
 interface OrderRegistrationRequest {
   shareholderId: string;
   type: OrderTypeEnum;
-  value: number;
+  unitValue: number;
   quantity: number;
   expirationType: OrderExpirationTypeEnum;
   expirationDate: string | null | undefined;
@@ -33,7 +33,7 @@ export class OrderRegistrationUseCase implements IUseCase<OrderRegistrationReque
   async execute({
     shareholderId,
     type,
-    value,
+    unitValue,
     quantity,
     expirationType,
     expirationDate,
@@ -46,7 +46,7 @@ export class OrderRegistrationUseCase implements IUseCase<OrderRegistrationReque
         createdAtDate: new Date().toString(),
         shareholderId,
         type,
-        value,
+        unitValue,
         quantity,
         expirationType,
         expirationDate,
