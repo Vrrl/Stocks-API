@@ -5,8 +5,10 @@
   "main": "serverless.ts",
   "scripts": {
     "deploy:all": "sls deploy",
-    "local:order-management": "sls order-management:offline --stage local --httpPort 4001 -t",
-    "local:account-management": "sls account-management:offline --stage local --httpPort 4001 -t",
+    "deploy:account-management": "sls account-management:deploy",
+    "deploy:order-management": "sls order-management:deploy",
+    "local:order-management": "sls order-management:offline --stage local",
+    "local:account-management": "sls account-management:offline --stage local",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },

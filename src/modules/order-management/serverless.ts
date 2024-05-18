@@ -13,7 +13,7 @@ const serverlessConfiguration: AWS = {
     runtime: 'nodejs20.x',
     deploymentMethod: 'direct',
     versionFunctions: false,
-    timeout: 30,
+    timeout: 900,
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -34,14 +34,21 @@ const serverlessConfiguration: AWS = {
     esbuild: {
       bundle: true,
       minify: false,
-      sourcemap: false,
+      sourcemap: true,
       exclude: ['aws-sdk'],
       target: 'node16',
       define: { 'require.resolve': undefined },
       platform: 'node',
       concurrency: 10,
     },
-    'serverless-offline': { noPrependStageInUrl: true },
+    'serverless-offline': {
+      noPrependStageInUrl: true,
+      noTimeout: true,
+      httpPort: 28010,
+      websocketPort: 28011,
+      lambdaPort: 28012,
+      albPort: 28013,
+    },
   },
 };
 

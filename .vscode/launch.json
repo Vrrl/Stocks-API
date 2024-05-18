@@ -7,6 +7,7 @@
       "request": "launch",
       "runtimeExecutable": "yarn",
       "args": ["local:order-management"],
+      "runtimeArgs": ["--inspect=9229"],
       "autoAttachChildProcesses": true,
       "sourceMaps": true,
       "skipFiles": ["<node_internals>/**"],
@@ -18,21 +19,18 @@
       "request": "launch",
       "runtimeExecutable": "yarn",
       "args": ["local:account-management"],
+      "runtimeArgs": ["--inspect=9230"],
       "autoAttachChildProcesses": true,
       "sourceMaps": true,
       "skipFiles": ["<node_internals>/**"],
       "console": "integratedTerminal"
-    },
-    // {
-    //   "name": "Severless dev",
-    //   "type": "node",
-    //   "request": "launch",
-    //   "runtimeExecutable": "yarn",
-    //   "args": ["run-script", "dev"],
-    //   "autoAttachChildProcesses": true,
-    //   "sourceMaps": true,
-    //   "skipFiles": ["<node_internals>/**"],
-    //   "console": "integratedTerminal"
-    // },
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Serverless local All",
+      "configurations": ["Serverless local Order Management", "Serverless local Account Management"],
+      "stopAll": true
+    }
   ]
 }

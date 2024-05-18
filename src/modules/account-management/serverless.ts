@@ -41,7 +41,14 @@ const serverlessConfiguration: AWS = {
       platform: 'node',
       concurrency: 10,
     },
-    'serverless-offline': { noPrependStageInUrl: true },
+    'serverless-offline': {
+      noPrependStageInUrl: true,
+      noTimeout: true,
+      httpPort: 28000,
+      websocketPort: 28001,
+      lambdaPort: 28002,
+      albPort: 28003,
+    },
   },
 };
 
