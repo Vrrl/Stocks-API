@@ -6,4 +6,3 @@ export const AWS_NODEJS_CONNECTION_REUSE_ENABLED = '';
 export const DYNAMO_ORDERS_TABLE = ``;
 export const COGNITO_USER_POOL_ID = ``;
 export const COGNITO_CLIENT_ID = ``;
-export const SNS_ORDER_TOPIC = ``;
