@@ -11,7 +11,7 @@ import { IEventNotifier } from '../../infra/event/event-notifier';
 import { EventNames } from '../../domain/event-names';
 
 interface OrderRegistrationRequest {
-  investorId: string;
+  shareholderId: string;
   type: OrderTypeEnum;
   value: number;
   quantity: number;
@@ -31,7 +31,7 @@ export class OrderRegistrationUseCase implements IUseCase<OrderRegistrationReque
   ) {}
 
   async execute({
-    investorId,
+    shareholderId,
     type,
     value,
     quantity,
@@ -44,7 +44,7 @@ export class OrderRegistrationUseCase implements IUseCase<OrderRegistrationReque
       {
         status: OrderStatusEnum.Pending,
         createdAtDate: new Date().toString(),
-        investorId,
+        shareholderId,
         type,
         value,
         quantity,

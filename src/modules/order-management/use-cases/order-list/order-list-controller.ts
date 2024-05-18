@@ -26,7 +26,7 @@ export class OrderListController extends Controller {
   async perform(httpRequest: HttpRequest, context: ControllerContext): Promise<HttpResponse> {
     const user = context.user as User;
 
-    const userOrders = await this.orderListUseCase.execute({ investorId: user.id });
+    const userOrders = await this.orderListUseCase.execute({ shareholderId: user.id });
 
     return ok(userOrders);
   }

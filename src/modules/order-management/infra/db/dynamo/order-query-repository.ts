@@ -18,13 +18,13 @@ export class OrderQueryRepository implements IOrderQueryRepository {
     );
   }
 
-  async listByInvestorId(id: string): Promise<Order[]> {
+  async listByShareholderId(id: string): Promise<Order[]> {
     const queryCommand = new QueryCommand({
       TableName: this.DYNAMO_ORDERS_TABLE,
-      KeyConditionExpression: 'investorId = :investorId',
+      KeyConditionExpression: 'shareholderId = :shareholderId',
       ExpressionAttributeValues: marshall(
         {
-          ':investorId': id,
+          ':shareholderId': id,
         },
         { removeUndefinedValues: true },
       ),

@@ -8,7 +8,7 @@ import { exhaustiveGuard } from '@src/core/utils/exhaustiveGuard';
 import { isBefore, isSameDay } from 'date-fns';
 
 interface OrderProps {
-  investorId: string;
+  shareholderId: string;
   status: OrderStatusEnum;
   type: OrderTypeEnum;
   value: FinantialNumber;
@@ -112,7 +112,7 @@ export class Order extends AggregateRoot<OrderProps> {
 
   static createFromPrimitive(
     props: {
-      investorId: string;
+      shareholderId: string;
       status: OrderStatusEnum;
       type: OrderTypeEnum;
       value: number;
@@ -126,7 +126,7 @@ export class Order extends AggregateRoot<OrderProps> {
   ) {
     return new Order(
       {
-        investorId: props.investorId,
+        shareholderId: props.shareholderId,
         status: props.status,
         type: props.type,
         value: FinantialNumber.create({ value: props.value }),
@@ -143,7 +143,7 @@ export class Order extends AggregateRoot<OrderProps> {
   public toJson(): object {
     return {
       id: this.id,
-      investorId: this.props.investorId,
+      shareholderId: this.props.shareholderId,
       status: this.props.status,
       type: this.props.type,
       value: this.props.value.formatedValue,

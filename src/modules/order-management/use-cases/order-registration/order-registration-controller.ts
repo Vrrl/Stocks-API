@@ -39,7 +39,7 @@ export class OrderRegistrationController extends Controller {
     const user = context.user as User;
 
     await this.orderRegistrationUseCase.execute({
-      investorId: user.id,
+      shareholderId: user.id,
       type,
       value,
       quantity,

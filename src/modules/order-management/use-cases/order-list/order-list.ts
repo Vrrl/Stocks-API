@@ -5,7 +5,7 @@ import { IOrderQueryRepository } from '../../infra/db/order-query-repository';
 import { inject, injectable } from 'inversify/lib/inversify';
 
 interface OrderListRequest {
-  investorId: string;
+  shareholderId: string;
 }
 
 type OrderListResponse = Order[];
@@ -17,8 +17,8 @@ export class OrderListUseCase implements IUseCase<OrderListRequest, OrderListRes
     private readonly orderQueryRepository: IOrderQueryRepository,
   ) {}
 
-  async execute({ investorId }: OrderListRequest): Promise<OrderListResponse> {
-    const orders = await this.orderQueryRepository.listByInvestorId(investorId);
+  async execute({ shareholderId }: OrderListRequest): Promise<OrderListResponse> {
+    const orders = await this.orderQueryRepository.listByShareholderId(shareholderId);
 
     return orders;
   }
