@@ -2,6 +2,17 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug Current Test File",
+      "type": "node",
+      "request": "launch",
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
+      "args": ["run", "${relativeFile}"],
+      "smartStep": true,
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Serverless local Order Management",
       "type": "node",
       "request": "launch",
@@ -24,12 +35,28 @@
       "sourceMaps": true,
       "skipFiles": ["<node_internals>/**"],
       "console": "integratedTerminal"
+    },
+    {
+      "name": "Serverless local Order Book",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "yarn",
+      "args": ["local:order-book"],
+      "runtimeArgs": ["--inspect=9231"],
+      "autoAttachChildProcesses": true,
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"],
+      "console": "integratedTerminal"
     }
   ],
   "compounds": [
     {
       "name": "Serverless local All",
-      "configurations": ["Serverless local Order Management", "Serverless local Account Management"],
+      "configurations": [
+        "Serverless local Order Management",
+        "Serverless local Account Management",
+        "Serverless local Order Book"
+      ],
       "stopAll": true
     }
   ]

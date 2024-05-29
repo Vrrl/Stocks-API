@@ -3,6 +3,7 @@ const TYPES = {
   DynamoDBClient: Symbol.for('DynamoDBClient'),
   S3Client: Symbol.for('S3Client'),
   SNSClient: Symbol.for('SNSClient'),
+  SQSClient: Symbol.for('SQSClient'),
   CognitoIdentityProvider: Symbol.for('CognitoIdentityProvider'),
   // Services
   IAuthenticationService: Symbol.for('IAuthenticationService'),
@@ -12,6 +13,8 @@ const TYPES = {
   IOrderQueryRepository: Symbol.for('IOrderQueryRepository'),
 
   IEventNotifier: Symbol.for('IEventNotifier'),
+
+  IQueueClient: Symbol.for('IQueueClient'),
   // UseCases
   SignUpUseCase: Symbol.for('SignUpUseCase'),
   SignUpConfirmUseCase: Symbol.for('SignUpConfirmUseCase'),
@@ -19,6 +22,10 @@ const TYPES = {
   LogInUseCase: Symbol.for('LogInUseCase'),
   OrderRegistrationUseCase: Symbol.for('OrderRegistrationUseCase'),
   OrderListUseCase: Symbol.for('OrderListUseCase'),
+
+  // Misc
+  Engine: Symbol.for('Engine'),
+  OrderBook: Symbol.for('OrderBook'),
 };
 
 export default TYPES;
