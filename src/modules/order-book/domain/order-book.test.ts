@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { OrderBook } from './order-book';
-import { OrderTypeEnum } from '../dtos/order-type-enum';
+import { OrderTypeEnum } from './order-type-enum';
 import { createRandomOrder } from '../test/utils/factories';
-import { OrderExpirationTypeEnum } from '../dtos/order-expiration-type-enum';
+import { OrderExpirationTypeEnum } from './order-expiration-type-enum';
 import moment from 'moment';
-import { OrderStatusEnum } from '../dtos/order-status-enum';
+import { OrderStatusEnum } from './order-status-enum';
 import _ from 'lodash';
 
 describe('OrderBook Domain', () => {
@@ -148,7 +148,7 @@ describe('OrderBook Domain', () => {
         const result = orderBook.executeOrder(order);
 
         expect(result.executedOrderMatches.length).toEqual(0);
-        expect(result.executedOrder).toEqual(order);
+        expect(result.executedOrder.quantity).toEqual(0);
         expect(orderBook['orders'][ordersInBook[0].type].length).toEqual(0);
         expect(orderBook['orders'][order.type][0]).toEqual(order);
       },
@@ -262,6 +262,9 @@ describe('OrderBook Domain', () => {
         expect(result.executedOrder.status).toBe(OrderStatusEnum.Canceled);
         expect(result.executedOrderMatches.length).toEqual(0);
         expect(orderBook['orders'][order.type].length).toBe(0);
+        if (ordersInBook.length) {
+          expect(orderBook['orders'][ordersInBook[0].type].length).toBe(ordersInBook.length);
+        }
       },
     );
 
@@ -384,7 +387,7 @@ describe('OrderBook Domain', () => {
         const result = orderBook.executeOrder(order);
 
         expect(result.executedOrderMatches.length).toEqual(0);
-        expect(result.executedOrder).toStrictEqual(order);
+        expect(result.executedOrder.quantity).toEqual(0);
         expect(orderBook['orders'][order.type].find(x => x.id === order.id)).toEqual(order);
       },
     );
@@ -632,40 +635,110 @@ describe('OrderBook Domain', () => {
     },
   );
 
-  // it.each([
-  //   {
-  //     order: createRandomOrder({
-  //       type: OrderTypeEnum.Buy,
-  //       value: 100,
-  //       quantity: 200,
-  //       expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-  //     }),
-  //     ordersInBook: [
-  //       createRandomOrder({
-  //         type: OrderTypeEnum.Sell,
-  //         value: 100,
-  //         quantity: 100,
-  //         expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-  //       }),
-  //     ],
-  //   },
-  // ])(
-  //   'should return the quantity remaining of the executed $order.type Order and all the matches quantities for $ordersInBook.0.type Order',
-  //   ({ order, ordersInBook }) => {
-  //     const totalOrdersInBookQuantity = _.sumBy(ordersInBook, x => x.quantity);
+  it.each([
+    {
+      order: createRandomOrder({
+        type: OrderTypeEnum.Buy,
+        value: 100,
+        quantity: 300,
+        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+      }),
+      ordersInBook: [
+        createRandomOrder({
+          type: OrderTypeEnum.Sell,
+          value: 100,
+          quantity: 100,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+      ],
+    },
+    {
+      order: createRandomOrder({
+        type: OrderTypeEnum.Sell,
+        value: 100,
+        quantity: 300,
+        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+      }),
+      ordersInBook: [
+        createRandomOrder({
+          type: OrderTypeEnum.Buy,
+          value: 100,
+          quantity: 100,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+      ],
+    },
 
-  //     const = totalOrdersInBookQuantity
-  //     const remainingExecutedOrderQuantity =
-  //       totalMatchesQuantity < order.quantity ? order.quantity - totalMatchesQuantity : 0;
+    {
+      order: createRandomOrder({
+        type: OrderTypeEnum.Buy,
+        value: 100,
+        quantity: 300,
+        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+      }),
+      ordersInBook: [
+        createRandomOrder({
+          type: OrderTypeEnum.Sell,
+          value: 100,
+          quantity: 100,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        createRandomOrder({
+          type: OrderTypeEnum.Sell,
+          value: 100,
+          quantity: 100,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+      ],
+    },
+    {
+      order: createRandomOrder({
+        type: OrderTypeEnum.Sell,
+        value: 100,
+        quantity: 300,
+        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+      }),
+      ordersInBook: [
+        createRandomOrder({
+          type: OrderTypeEnum.Buy,
+          value: 100,
+          quantity: 100,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        createRandomOrder({
+          type: OrderTypeEnum.Buy,
+          value: 100,
+          quantity: 100,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+      ],
+    },
+  ])(
+    'should return the quantity and total value executed of the $order.type Order and all the matches quantities for $ordersInBook.0.type Order',
+    ({ order, ordersInBook }) => {
+      const totalOrdersInBookQuantity = _.sumBy(ordersInBook, x => x.quantity);
+      const totalOrdersInBookValue = _.sumBy(ordersInBook, x => x.value);
 
-  //     const orderBook = new OrderBook();
+      const remainingExecutedOrderQuantity = order.quantity - totalOrdersInBookQuantity;
 
-  //     ordersInBook.forEach(order => orderBook.addOrder(order));
+      const orderBook = new OrderBook();
 
-  //     const result = orderBook.executeOrder(order);
+      ordersInBook.forEach(order => orderBook.addOrder(order));
 
-  //     expect(result.executedOrder).toBe(remainingExecutedOrderQuantity);
-  //     expect(_.sumBy(result.executedOrderMatches, x => x.quantity)).toEqual(totalMatchesQuantity);
-  //   },
-  // );
+      const result = orderBook.executeOrder(order);
+
+      expect(result.executedOrder.quantity).toEqual(totalOrdersInBookQuantity);
+      expect(result.executedOrder.status).toEqual(OrderStatusEnum.PartiallyFilled);
+      expect(result.executedOrder.totalValue).toEqual(totalOrdersInBookValue);
+
+      expect(_.sumBy(result.executedOrderMatches, x => x.quantity)).toEqual(totalOrdersInBookQuantity);
+      expect(result.executedOrderMatches.every(x => x.status === OrderStatusEnum.Filled)).toBe(true);
+
+      expect(orderBook['orders'][order.type][0].id).toEqual(order.id);
+      expect(orderBook['orders'][order.type][0].quantity).toEqual(remainingExecutedOrderQuantity);
+      expect(orderBook['orders'][order.type][0].value).toEqual(order.value);
+      expect(orderBook['orders'][order.type][0].createdAtEpoch).toEqual(order.createdAtEpoch);
+      expect(orderBook['orders'][order.type][0].expirationType).toEqual(order.expirationType);
+    },
+  );
 });

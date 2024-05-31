@@ -1,6 +1,6 @@
-import { OrderExpirationTypeEnum } from '../dtos/order-expiration-type-enum';
-import { OrderStatusEnum } from '../dtos/order-status-enum';
-import { OrderTypeEnum } from '../dtos/order-type-enum';
+import { OrderExpirationTypeEnum } from './order-expiration-type-enum';
+import { OrderStatusEnum } from './order-status-enum';
+import { OrderTypeEnum } from './order-type-enum';
 
 export class Order {
   id: string;

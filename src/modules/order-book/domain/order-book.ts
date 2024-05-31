@@ -1,9 +1,10 @@
 import { Order } from './order';
-import { OrderExpirationTypeEnum } from '../dtos/order-expiration-type-enum';
-import { OrderTypeEnum } from '../dtos/order-type-enum';
-import { ExecutionOrderResult } from '../dtos/execution-order-result';
-import { OrderStatusEnum } from '../dtos/order-status-enum';
+import { OrderExpirationTypeEnum } from './order-expiration-type-enum';
+import { OrderTypeEnum } from './order-type-enum';
+import { ExecutedOrderResultBuilder } from '../builders/executed-order-result-builder';
+import { OrderStatusEnum } from './order-status-enum';
 import _ from 'lodash';
+import { ExecutedOrderResult } from '../dtos/executed-order-result';
 
 export class OrderBook {
   private orders: { [OrderTypeEnum.Buy]: Order[]; [OrderTypeEnum.Sell]: Order[] } = {
@@ -25,15 +26,29 @@ export class OrderBook {
     ordersList.sort((a, b) => b.value - a.value || a.createdAtEpoch - b.createdAtEpoch);
   }
 
-  public executeOrder(newOrder: Order): ExecutionOrderResult {
-    const executionTimeEpoch = new Date().valueOf();
+  public removeOrder(order: Order) {
+    const ordersList = this.orders[order.type];
+
+    const targetIndex = ordersList.findIndex(x => x.id === order.id);
+
+    if (targetIndex >= 0) {
+      ordersList.splice(targetIndex, 1);
+    }
+  }
+
+  public executeOrder(newOrder: Order): ExecutedOrderResult {
+    const executionOrderResult = ExecutedOrderResultBuilder.createResultOf(newOrder);
+
     const oppositeTypeOrders = this.getOppositeTypeOrders(newOrder.type);
     let quantityToBeFilled = newOrder.quantity;
 
     const matchedOrders: Order[] = [];
 
     for (const oppositeTypeOrder of oppositeTypeOrders) {
-      if (oppositeTypeOrder.expirationEpoch && oppositeTypeOrder.expirationEpoch < executionTimeEpoch) {
+      if (
+        oppositeTypeOrder.expirationEpoch &&
+        oppositeTypeOrder.expirationEpoch < executionOrderResult.processedAtEpoch
+      ) {
         this.removeOrder(oppositeTypeOrder);
         continue;
       }
@@ -56,55 +71,37 @@ export class OrderBook {
       }
     }
 
-    const executedOrderMatches: Order[] = [];
-
     const matchedOrdersQuantities = _.sumBy(matchedOrders, matchedOrder => matchedOrder.quantity);
 
-    const isNewOrderFilled = matchedOrdersQuantities >= newOrder.quantity;
+    const willNewOrderBeFilled = matchedOrdersQuantities >= newOrder.quantity;
 
-    if (newOrder.expirationType === OrderExpirationTypeEnum.FillOrKill && !isNewOrderFilled) {
-      newOrder.status = OrderStatusEnum.Canceled;
-    } else {
+    if (newOrder.expirationType !== OrderExpirationTypeEnum.FillOrKill || willNewOrderBeFilled) {
       for (const matchedOrder of matchedOrders) {
-        const matchedOrderQuantitiesAfter =
-          newOrder.quantity < matchedOrder.quantity ? matchedOrder.quantity - newOrder.quantity : 0;
+        const matchedOrderQuantity = Math.min(newOrder.quantity, matchedOrder.quantity);
 
-        const isMatchedOrderFilled = matchedOrderQuantitiesAfter === 0;
+        const matchedOrderValue = newOrder.type === OrderTypeEnum.Sell ? newOrder.value : matchedOrder.value;
 
-        matchedOrder.quantity = matchedOrderQuantitiesAfter;
-        matchedOrder.status = isMatchedOrderFilled ? OrderStatusEnum.Filled : OrderStatusEnum.PartiallyFilled;
+        const orderMatchedStatus = executionOrderResult.addOrderMatch(
+          matchedOrder,
+          matchedOrderQuantity,
+          matchedOrderValue,
+        );
 
-        executedOrderMatches.push({
-          ...matchedOrder,
-          value: newOrder.type === OrderTypeEnum.Sell ? newOrder.value : matchedOrder.value,
-        });
-
-        if (isMatchedOrderFilled) {
+        if (orderMatchedStatus === OrderStatusEnum.PartiallyFilled) {
+          matchedOrder.quantity = matchedOrder.quantity - matchedOrderQuantity;
+          matchedOrder.status = orderMatchedStatus;
+        } else {
           this.removeOrder(matchedOrder);
         }
       }
 
-      newOrder.quantity = newOrder.quantity - matchedOrdersQuantities;
-      newOrder.status = isNewOrderFilled ? OrderStatusEnum.Filled : OrderStatusEnum.PartiallyFilled;
+      const remainingNewOrder = executionOrderResult.getRemainingExecutedOrder();
 
-      if (!isNewOrderFilled) {
-        this.addOrder(newOrder);
+      if (remainingNewOrder) {
+        this.addOrder(remainingNewOrder);
       }
     }
 
-    return {
-      executedOrderMatches,
-      executedOrder: newOrder,
-    };
-  }
-
-  public removeOrder(order: Order) {
-    const ordersList = this.orders[order.type];
-
-    const targetIndex = ordersList.findIndex(x => x.id === order.id);
-
-    if (targetIndex >= 0) {
-      ordersList.splice(targetIndex, 1);
-    }
+    return executionOrderResult.getResult();
   }
 }

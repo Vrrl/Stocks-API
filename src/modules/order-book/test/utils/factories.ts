@@ -1,6 +1,7 @@
 import { Order } from '../../domain/order';
-import { OrderExpirationTypeEnum } from '../../dtos/order-expiration-type-enum';
-import { OrderTypeEnum } from '../../dtos/order-type-enum';
+import { OrderExpirationTypeEnum } from '../../domain/order-expiration-type-enum';
+import { OrderStatusEnum } from '../../domain/order-status-enum';
+import { OrderTypeEnum } from '../../domain/order-type-enum';
 import { faker } from '@faker-js/faker';
 
 export function createRandomOrder(payload?: Partial<Order>) {
@@ -22,5 +23,6 @@ export function createRandomOrder(payload?: Partial<Order>) {
     expirationEpoch: expirationDate?.valueOf() ?? null,
     expirationType,
     quantity: payload?.quantity ?? faker.number.int() * 100,
+    status: payload?.status ?? OrderStatusEnum.Pending,
   } as Order;
 }
