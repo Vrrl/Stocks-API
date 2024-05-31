@@ -139,7 +139,7 @@ describe('OrderBook Domain', () => {
         ],
       },
     ])(
-      'should not return matches for a $order.type Order and a $ordersInBook.0.type Order $ordersInBook.0.expirationType with expirationDate $ordersInBook.0.expirationDate and remove expired Order from orderBook as it is already expired and add new order to the book',
+      'should not return matches for a $order.type Order and a $ordersInBook.0.type Order $ordersInBook.0.expirationType with expirationDate $ordersInBook.0.expirationDate and remove expired Order from orderBook and add new order to the book',
       ({ order, ordersInBook }) => {
         const orderBook = new OrderBook();
 
@@ -391,354 +391,353 @@ describe('OrderBook Domain', () => {
         expect(orderBook['orders'][order.type].find(x => x.id === order.id)).toEqual(order);
       },
     );
+    it.each([
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Buy,
+          value: 100,
+          quantity: 200,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Sell,
+            value: 100,
+            quantity: 200,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Sell,
+          value: 100,
+          quantity: 200,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Buy,
+            value: 100,
+            quantity: 200,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Buy,
+          value: 100,
+          quantity: 200,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Sell,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+          createRandomOrder({
+            type: OrderTypeEnum.Sell,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Sell,
+          value: 100,
+          quantity: 200,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Buy,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+          createRandomOrder({
+            type: OrderTypeEnum.Buy,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+    ])(
+      'should COMPLETELY fill a new $order.type Order with all $ordersInBook.0.type Orders and not add to the book and remove all $ordersInBook.0.type Orders to the book',
+      ({ order, ordersInBook }) => {
+        const orderBook = new OrderBook();
+
+        ordersInBook.forEach(order => orderBook.addOrder(order));
+
+        const result = orderBook.executeOrder(order);
+
+        expect(result.executedOrder.status).toBe(OrderStatusEnum.Filled);
+        expect(result.executedOrderMatches.length).toEqual(ordersInBook.length);
+        expect(result.executedOrderMatches.every(x => ordersInBook.some(y => y.id === x.id))).toBe(true);
+        expect(result.executedOrderMatches.every(x => x.status === OrderStatusEnum.Filled)).toBe(true);
+        expect(orderBook['orders'][order.type].length).toEqual(0);
+        expect(orderBook['orders'][ordersInBook[0].type].length).toEqual(0);
+      },
+    );
+
+    it.each([
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Buy,
+          value: 100,
+          quantity: 200,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Sell,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Sell,
+          value: 100,
+          quantity: 200,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Buy,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Buy,
+          value: 100,
+          quantity: 300,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Sell,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+          createRandomOrder({
+            type: OrderTypeEnum.Sell,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Sell,
+          value: 100,
+          quantity: 300,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Buy,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+          createRandomOrder({
+            type: OrderTypeEnum.Buy,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+    ])(
+      'should PARTIALLY fill a new $order.type Order with all $ordersInBook.0.type Orders and add the new Order to the book and remove all $ordersInBook.0.type Orders to the book',
+      ({ order, ordersInBook }) => {
+        const orderBook = new OrderBook();
+
+        ordersInBook.forEach(order => orderBook.addOrder(order));
+
+        const result = orderBook.executeOrder(order);
+
+        expect(result.executedOrder.status).toBe(OrderStatusEnum.PartiallyFilled);
+        expect(result.executedOrderMatches.length).toEqual(ordersInBook.length);
+        expect(result.executedOrderMatches.every(x => ordersInBook.some(y => y.id === x.id))).toBe(true);
+        expect(result.executedOrderMatches.every(x => x.status === OrderStatusEnum.Filled)).toBe(true);
+        expect(orderBook['orders'][order.type].length).toEqual(1);
+        expect(orderBook['orders'][ordersInBook[0].type].length).toEqual(0);
+      },
+    );
+
+    it.each([
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Buy,
+          value: 100,
+          quantity: 100,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Sell,
+            value: 100,
+            quantity: 200,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Sell,
+          value: 100,
+          quantity: 100,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Buy,
+            value: 100,
+            quantity: 200,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+    ])(
+      'should COMPLETELY fill a new $order.type Order and PARTIALLY fill $ordersInBook.0.type Order and not add to the book',
+      ({ order, ordersInBook }) => {
+        const orderBook = new OrderBook();
+
+        ordersInBook.forEach(order => orderBook.addOrder(order));
+
+        const result = orderBook.executeOrder(order);
+
+        expect(result.executedOrder.status).toBe(OrderStatusEnum.Filled);
+        expect(result.executedOrderMatches.length).toEqual(ordersInBook.length);
+        expect(result.executedOrderMatches.every(x => ordersInBook.some(y => y.id === x.id))).toBe(true);
+        expect(result.executedOrderMatches.every(x => x.status === OrderStatusEnum.PartiallyFilled)).toBe(true);
+        expect(orderBook['orders'][order.type].length).toEqual(0);
+        expect(orderBook['orders'][ordersInBook[0].type].length).toEqual(1);
+      },
+    );
+
+    it.each([
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Buy,
+          value: 100,
+          quantity: 300,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Sell,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Sell,
+          value: 100,
+          quantity: 300,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Buy,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Buy,
+          value: 100,
+          quantity: 300,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Sell,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+          createRandomOrder({
+            type: OrderTypeEnum.Sell,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+      {
+        order: createRandomOrder({
+          type: OrderTypeEnum.Sell,
+          value: 100,
+          quantity: 300,
+          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+        }),
+        ordersInBook: [
+          createRandomOrder({
+            type: OrderTypeEnum.Buy,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+          createRandomOrder({
+            type: OrderTypeEnum.Buy,
+            value: 100,
+            quantity: 100,
+            expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
+          }),
+        ],
+      },
+    ])(
+      'should return the quantity and total value executed of the $order.type Order and all the matches quantities for $ordersInBook.0.type Order',
+      ({ order, ordersInBook }) => {
+        const totalOrdersInBookQuantity = _.sumBy(ordersInBook, x => x.quantity);
+        const totalOrdersInBookValue = _.sumBy(ordersInBook, x => x.value);
+
+        const remainingExecutedOrderQuantity = order.quantity - totalOrdersInBookQuantity;
+
+        const orderBook = new OrderBook();
+
+        ordersInBook.forEach(order => orderBook.addOrder(order));
+
+        const result = orderBook.executeOrder(order);
+
+        expect(result.executedOrder.quantity).toEqual(totalOrdersInBookQuantity);
+        expect(result.executedOrder.status).toEqual(OrderStatusEnum.PartiallyFilled);
+        expect(result.executedOrder.totalValue).toEqual(totalOrdersInBookValue);
+
+        expect(_.sumBy(result.executedOrderMatches, x => x.quantity)).toEqual(totalOrdersInBookQuantity);
+        expect(result.executedOrderMatches.every(x => x.status === OrderStatusEnum.Filled)).toBe(true);
+
+        expect(orderBook['orders'][order.type][0].id).toEqual(order.id);
+        expect(orderBook['orders'][order.type][0].quantity).toEqual(remainingExecutedOrderQuantity);
+        expect(orderBook['orders'][order.type][0].value).toEqual(order.value);
+        expect(orderBook['orders'][order.type][0].createdAtEpoch).toEqual(order.createdAtEpoch);
+        expect(orderBook['orders'][order.type][0].expirationType).toEqual(order.expirationType);
+      },
+    );
   });
-
-  it.each([
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Buy,
-        value: 100,
-        quantity: 200,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Sell,
-          value: 100,
-          quantity: 200,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Sell,
-        value: 100,
-        quantity: 200,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Buy,
-          value: 100,
-          quantity: 200,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Buy,
-        value: 100,
-        quantity: 200,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Sell,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-        createRandomOrder({
-          type: OrderTypeEnum.Sell,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Sell,
-        value: 100,
-        quantity: 200,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Buy,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-        createRandomOrder({
-          type: OrderTypeEnum.Buy,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-  ])(
-    'should COMPLETELY fill a new $order.type Order with all $ordersInBook.0.type Orders and not add to the book',
-    ({ order, ordersInBook }) => {
-      const orderBook = new OrderBook();
-
-      ordersInBook.forEach(order => orderBook.addOrder(order));
-
-      const result = orderBook.executeOrder(order);
-
-      expect(result.executedOrder.status).toBe(OrderStatusEnum.Filled);
-      expect(result.executedOrderMatches.length).toEqual(ordersInBook.length);
-      expect(result.executedOrderMatches.every(x => ordersInBook.some(y => y.id === x.id))).toBe(true);
-      expect(result.executedOrderMatches.every(x => x.status === OrderStatusEnum.Filled)).toBe(true);
-      expect(orderBook['orders'][order.type].length).toEqual(0);
-      expect(orderBook['orders'][ordersInBook[0].type].length).toEqual(0);
-    },
-  );
-
-  it.each([
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Buy,
-        value: 100,
-        quantity: 200,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Sell,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Sell,
-        value: 100,
-        quantity: 200,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Buy,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Buy,
-        value: 100,
-        quantity: 300,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Sell,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-        createRandomOrder({
-          type: OrderTypeEnum.Sell,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Sell,
-        value: 100,
-        quantity: 300,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Buy,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-        createRandomOrder({
-          type: OrderTypeEnum.Buy,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-  ])(
-    'should PARTIALLY fill a new $order.type Order with all $ordersInBook.0.type Orders and add the new Order to the book and remove all $ordersInBook.0.type Orders to the book',
-    ({ order, ordersInBook }) => {
-      const orderBook = new OrderBook();
-
-      ordersInBook.forEach(order => orderBook.addOrder(order));
-
-      const result = orderBook.executeOrder(order);
-
-      expect(result.executedOrder.status).toBe(OrderStatusEnum.PartiallyFilled);
-      expect(result.executedOrderMatches.length).toEqual(ordersInBook.length);
-      expect(result.executedOrderMatches.every(x => ordersInBook.some(y => y.id === x.id))).toBe(true);
-      expect(result.executedOrderMatches.every(x => x.status === OrderStatusEnum.Filled)).toBe(true);
-      expect(orderBook['orders'][order.type].length).toEqual(1);
-      expect(orderBook['orders'][ordersInBook[0].type].length).toEqual(0);
-    },
-  );
-
-  it.each([
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Buy,
-        value: 100,
-        quantity: 100,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Sell,
-          value: 100,
-          quantity: 200,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Sell,
-        value: 100,
-        quantity: 100,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Buy,
-          value: 100,
-          quantity: 200,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-  ])(
-    'should COMPLETELY fill a new $order.type Order and PARTIALLY fill $ordersInBook.0.type Order and not add to the book',
-    ({ order, ordersInBook }) => {
-      const orderBook = new OrderBook();
-
-      ordersInBook.forEach(order => orderBook.addOrder(order));
-
-      const result = orderBook.executeOrder(order);
-
-      expect(result.executedOrder.status).toBe(OrderStatusEnum.Filled);
-      expect(result.executedOrderMatches.length).toEqual(ordersInBook.length);
-      expect(result.executedOrderMatches.every(x => ordersInBook.some(y => y.id === x.id))).toBe(true);
-      expect(result.executedOrderMatches.every(x => x.status === OrderStatusEnum.PartiallyFilled)).toBe(true);
-      expect(orderBook['orders'][order.type].length).toEqual(0);
-      expect(orderBook['orders'][ordersInBook[0].type].length).toEqual(1);
-    },
-  );
-
-  it.each([
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Buy,
-        value: 100,
-        quantity: 300,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Sell,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Sell,
-        value: 100,
-        quantity: 300,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Buy,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Buy,
-        value: 100,
-        quantity: 300,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Sell,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-        createRandomOrder({
-          type: OrderTypeEnum.Sell,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-    {
-      order: createRandomOrder({
-        type: OrderTypeEnum.Sell,
-        value: 100,
-        quantity: 300,
-        expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-      }),
-      ordersInBook: [
-        createRandomOrder({
-          type: OrderTypeEnum.Buy,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-        createRandomOrder({
-          type: OrderTypeEnum.Buy,
-          value: 100,
-          quantity: 100,
-          expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
-        }),
-      ],
-    },
-  ])(
-    'should return the quantity and total value executed of the $order.type Order and all the matches quantities for $ordersInBook.0.type Order',
-    ({ order, ordersInBook }) => {
-      const totalOrdersInBookQuantity = _.sumBy(ordersInBook, x => x.quantity);
-      const totalOrdersInBookValue = _.sumBy(ordersInBook, x => x.value);
-
-      const remainingExecutedOrderQuantity = order.quantity - totalOrdersInBookQuantity;
-
-      const orderBook = new OrderBook();
-
-      ordersInBook.forEach(order => orderBook.addOrder(order));
-
-      const result = orderBook.executeOrder(order);
-
-      expect(result.executedOrder.quantity).toEqual(totalOrdersInBookQuantity);
-      expect(result.executedOrder.status).toEqual(OrderStatusEnum.PartiallyFilled);
-      expect(result.executedOrder.totalValue).toEqual(totalOrdersInBookValue);
-
-      expect(_.sumBy(result.executedOrderMatches, x => x.quantity)).toEqual(totalOrdersInBookQuantity);
-      expect(result.executedOrderMatches.every(x => x.status === OrderStatusEnum.Filled)).toBe(true);
-
-      expect(orderBook['orders'][order.type][0].id).toEqual(order.id);
-      expect(orderBook['orders'][order.type][0].quantity).toEqual(remainingExecutedOrderQuantity);
-      expect(orderBook['orders'][order.type][0].value).toEqual(order.value);
-      expect(orderBook['orders'][order.type][0].createdAtEpoch).toEqual(order.createdAtEpoch);
-      expect(orderBook['orders'][order.type][0].expirationType).toEqual(order.expirationType);
-    },
-  );
 });
