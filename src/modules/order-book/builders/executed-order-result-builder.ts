@@ -12,8 +12,8 @@ type ExecutedOrderProps = {
   createdAtTimestamp: number;
   expirationTimestamp: number | null;
   initialStatus: OrderStatusEnum;
-  executedQuantity: number;
-  initialQuantity: number;
+  executedShares: number;
+  initialShares: number;
   initialValue: number;
   executedTotalValue: number;
 };
@@ -22,13 +22,13 @@ class ExecutedOrder {
   constructor(public props: ExecutedOrderProps) {}
 
   get executedStatus(): OrderStatusEnum {
-    const isFilled = this.props.executedQuantity === this.props.initialQuantity;
+    const isFilled = this.props.executedShares === this.props.initialShares;
 
     if (this.props.expirationType === OrderExpirationTypeEnum.FillOrKill && !isFilled) {
       return OrderStatusEnum.Canceled;
     }
 
-    if (this.props.executedQuantity === 0) {
+    if (this.props.executedShares === 0) {
       return this.props.initialStatus;
     }
 
@@ -37,8 +37,8 @@ class ExecutedOrder {
     return status;
   }
 
-  get remainingQuantity(): number {
-    return this.props.initialQuantity - this.props.executedQuantity;
+  get remainingShares(): number {
+    return this.props.initialShares - this.props.executedShares;
   }
 }
 
@@ -60,32 +60,32 @@ export class ExecutedOrderResultBuilder {
       expirationType: order.expirationType,
       createdAtTimestamp: order.createdAtTimestamp,
       expirationTimestamp: order.expirationTimestamp,
-      initialQuantity: order.quantity,
+      initialShares: order.shares,
       initialStatus: order.status,
       initialValue: order.unitValue,
-      executedQuantity: 0,
+      executedShares: 0,
       executedTotalValue: 0,
     });
     return new ExecutedOrderResultBuilder({ executedOrder });
   }
 
-  public addOrderMatch(matchedOrder: Order, matchedQuantity: number, matchedValue: number): OrderStatusEnum {
+  public addOrderMatch(matchedOrder: Order, matchedShares: number, matchedValue: number): OrderStatusEnum {
     const executedOrderMatch = new ExecutedOrder({
       id: matchedOrder.id,
       type: matchedOrder.type,
       expirationType: matchedOrder.expirationType,
       createdAtTimestamp: matchedOrder.createdAtTimestamp,
       expirationTimestamp: matchedOrder.expirationTimestamp,
-      initialQuantity: matchedOrder.quantity,
+      initialShares: matchedOrder.shares,
       initialStatus: matchedOrder.status,
       initialValue: matchedOrder.unitValue,
-      executedQuantity: matchedQuantity,
+      executedShares: matchedShares,
       executedTotalValue: matchedValue,
     });
 
     this.executedOrderMatches.push(executedOrderMatch);
     this.executedOrder.props.executedTotalValue += matchedValue;
-    this.executedOrder.props.executedQuantity += matchedQuantity;
+    this.executedOrder.props.executedShares += matchedShares;
 
     return executedOrderMatch.executedStatus;
   }
@@ -100,7 +100,7 @@ export class ExecutedOrderResultBuilder {
       createdAtTimestamp: this.executedOrder.props.createdAtTimestamp,
       expirationTimestamp: this.executedOrder.props.expirationTimestamp,
       expirationType: this.executedOrder.props.expirationType,
-      quantity: this.executedOrder.remainingQuantity,
+      shares: this.executedOrder.remainingShares,
       status: this.executedOrder.executedStatus,
       type: this.executedOrder.props.type,
       unitValue: this.executedOrder.props.initialValue,
@@ -113,7 +113,7 @@ export class ExecutedOrderResultBuilder {
     const executedOrder = {
       id: this.executedOrder.props.id,
       expirationType: this.executedOrder.props.expirationType,
-      quantity: this.executedOrder.props.executedQuantity,
+      shares: this.executedOrder.props.executedShares,
       status: this.executedOrder.executedStatus,
       type: this.executedOrder.props.type,
       totalValue: this.executedOrder.props.executedTotalValue,
@@ -122,7 +122,7 @@ export class ExecutedOrderResultBuilder {
     const executedOrderMatches = this.executedOrderMatches.map(orderMatch => ({
       id: orderMatch.props.id,
       expirationType: orderMatch.props.expirationType,
-      quantity: orderMatch.props.executedQuantity,
+      shares: orderMatch.props.executedShares,
       status: orderMatch.executedStatus,
       type: orderMatch.props.type,
       totalValue: orderMatch.props.executedTotalValue,

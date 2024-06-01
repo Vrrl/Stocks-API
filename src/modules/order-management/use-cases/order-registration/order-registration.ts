@@ -14,7 +14,7 @@ interface OrderRegistrationRequest {
   shareholderId: string;
   type: OrderTypeEnum;
   unitValue: number;
-  quantity: number;
+  shares: number;
   expirationType: OrderExpirationTypeEnum;
   expirationDate: string | null | undefined;
 }
@@ -34,7 +34,7 @@ export class OrderRegistrationUseCase implements IUseCase<OrderRegistrationReque
     shareholderId,
     type,
     unitValue,
-    quantity,
+    shares,
     expirationType,
     expirationDate,
   }: OrderRegistrationRequest): Promise<OrderRegistrationResponse> {
@@ -47,7 +47,7 @@ export class OrderRegistrationUseCase implements IUseCase<OrderRegistrationReque
         shareholderId,
         type,
         unitValue,
-        quantity,
+        shares,
         expirationType,
         expirationDate,
       },

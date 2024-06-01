@@ -6,7 +6,7 @@ export class MessageContentParser {
       id: content.id,
       type: content.type,
       unitValue: content.unitValue,
-      quantity: content.quantity,
+      shares: content.shares,
       status: content.status,
       createdAtTimestamp: content.createdAtTimestamp,
       expirationType: content.expirationType,

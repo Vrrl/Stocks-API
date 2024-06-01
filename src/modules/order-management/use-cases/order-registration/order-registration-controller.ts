@@ -26,7 +26,7 @@ export class OrderRegistrationController extends Controller {
       body: z.object({
         type: OrderTypeSchema,
         unitValue: z.number(),
-        quantity: z.number(),
+        shares: z.number(),
         expirationType: OrderExpirationTypeSchema,
         expirationDate: z.number().optional(),
       }),
@@ -34,7 +34,7 @@ export class OrderRegistrationController extends Controller {
   }
 
   async perform(httpRequest: HttpRequest, context: ControllerContext): Promise<HttpResponse> {
-    const { type, unitValue, quantity, expirationType, expirationDate } = httpRequest.body;
+    const { type, unitValue, shares, expirationType, expirationDate } = httpRequest.body;
 
     const user = context.user as User;
 
@@ -42,7 +42,7 @@ export class OrderRegistrationController extends Controller {
       shareholderId: user.id,
       type,
       unitValue,
-      quantity,
+      shares,
       expirationType,
       expirationDate,
     });

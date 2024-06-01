@@ -6,7 +6,7 @@ type ExecutedOrder = {
   id: string;
   type: OrderTypeEnum;
   expirationType: OrderExpirationTypeEnum;
-  quantity: number;
+  shares: number;
   totalValue: number;
   status: OrderStatusEnum;
 };

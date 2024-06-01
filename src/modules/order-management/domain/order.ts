@@ -12,7 +12,7 @@ interface OrderProps {
   status: OrderStatusEnum;
   type: OrderTypeEnum;
   unitValue: FinantialNumber;
-  quantity: number;
+  shares: number;
   expirationType: OrderExpirationTypeEnum;
   expirationDate: Date | null;
   createdAtDate: Date;
@@ -116,7 +116,7 @@ export class Order extends AggregateRoot<OrderProps> {
       status: OrderStatusEnum;
       type: OrderTypeEnum;
       unitValue: number;
-      quantity: number;
+      shares: number;
       expirationType: OrderExpirationTypeEnum;
       expirationDate?: string | null;
       createdAtDate: string;
@@ -130,7 +130,7 @@ export class Order extends AggregateRoot<OrderProps> {
         status: props.status,
         type: props.type,
         unitValue: FinantialNumber.create({ value: props.unitValue }),
-        quantity: props.quantity,
+        shares: props.shares,
         expirationType: props.expirationType,
         expirationDate: !props.expirationDate ? null : new Date(props.expirationDate),
         createdAtDate: new Date(props.createdAtDate),
@@ -147,7 +147,7 @@ export class Order extends AggregateRoot<OrderProps> {
       status: this.props.status,
       type: this.props.type,
       unitValue: this.props.unitValue.value,
-      quantity: this.props.quantity,
+      shares: this.props.shares,
       expirationType: this.props.expirationType,
       expirationDate: this.props.expirationDate,
       expirationTimestamp: this.expirationTimestamp,

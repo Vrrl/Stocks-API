@@ -75,14 +75,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 100,
+          shares: 100,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 200,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.DayOrder,
             expirationTimestamp: moment().subtract(1, 'day').valueOf(),
           }),
@@ -92,14 +92,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 200,
-          quantity: 100,
+          shares: 100,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.DayOrder,
             expirationTimestamp: moment().subtract(1, 'day').valueOf(),
           }),
@@ -109,14 +109,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 100,
+          shares: 100,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 200,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillDate,
             expirationTimestamp: moment().subtract(2, 'day').valueOf(),
           }),
@@ -126,14 +126,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 100,
-          quantity: 200,
+          shares: 200,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillDate,
             expirationTimestamp: moment().subtract(2, 'day').valueOf(),
           }),
@@ -149,7 +149,7 @@ describe('OrderBook Domain', () => {
         const result = orderBook.executeOrder(order);
 
         expect(result.executedOrderMatches.length).toEqual(0);
-        expect(result.executedOrder.quantity).toEqual(0);
+        expect(result.executedOrder.shares).toEqual(0);
         expect(orderBook['orders'][ordersInBook[0].type].length).toEqual(0);
         expect(orderBook['orders'][order.type][0]).toEqual(order);
       },
@@ -160,7 +160,7 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 100,
+          shares: 100,
           expirationType: OrderExpirationTypeEnum.FillOrKill,
         }),
         ordersInBook: [],
@@ -169,14 +169,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 200,
+          shares: 200,
           expirationType: OrderExpirationTypeEnum.FillOrKill,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -185,20 +185,20 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 300,
+          shares: 300,
           expirationType: OrderExpirationTypeEnum.FillOrKill,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -208,7 +208,7 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 100,
-          quantity: 100,
+          shares: 100,
           expirationType: OrderExpirationTypeEnum.FillOrKill,
         }),
         ordersInBook: [],
@@ -217,14 +217,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 100,
-          quantity: 200,
+          shares: 200,
           expirationType: OrderExpirationTypeEnum.FillOrKill,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -233,20 +233,20 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 100,
-          quantity: 300,
+          shares: 300,
           expirationType: OrderExpirationTypeEnum.FillOrKill,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -274,20 +274,20 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 200,
-          quantity: 100,
+          shares: 100,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -296,20 +296,20 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 100,
+          shares: 100,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -319,20 +319,20 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 100,
-          quantity: 100,
+          shares: 100,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -341,20 +341,20 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 100,
+          shares: 100,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -364,7 +364,7 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 100,
-          quantity: 100,
+          shares: 100,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [],
@@ -373,7 +373,7 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 100,
+          shares: 100,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [],
@@ -388,7 +388,7 @@ describe('OrderBook Domain', () => {
         const result = orderBook.executeOrder(order);
 
         expect(result.executedOrderMatches.length).toEqual(0);
-        expect(result.executedOrder.quantity).toEqual(0);
+        expect(result.executedOrder.shares).toEqual(0);
         expect(orderBook['orders'][order.type].find(x => x.id === order.id)).toEqual(order);
       },
     );
@@ -397,14 +397,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 200,
+          shares: 200,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 200,
+            shares: 200,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -413,14 +413,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 100,
-          quantity: 200,
+          shares: 200,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 200,
+            shares: 200,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -429,20 +429,20 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 200,
+          shares: 200,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -451,20 +451,20 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 100,
-          quantity: 200,
+          shares: 200,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -492,14 +492,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 200,
+          shares: 200,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -508,14 +508,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 100,
-          quantity: 200,
+          shares: 200,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -525,20 +525,20 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 300,
+          shares: 300,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -547,20 +547,20 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 100,
-          quantity: 300,
+          shares: 300,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -588,14 +588,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 100,
+          shares: 100,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 200,
+            shares: 200,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -604,14 +604,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 100,
-          quantity: 100,
+          shares: 100,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 200,
+            shares: 200,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -639,14 +639,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 300,
+          shares: 300,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -655,14 +655,14 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 100,
-          quantity: 300,
+          shares: 300,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -672,20 +672,20 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Buy,
           unitValue: 100,
-          quantity: 300,
+          shares: 300,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
           createRandomOrder({
             type: OrderTypeEnum.Sell,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
@@ -694,31 +694,31 @@ describe('OrderBook Domain', () => {
         order: createRandomOrder({
           type: OrderTypeEnum.Sell,
           unitValue: 100,
-          quantity: 300,
+          shares: 300,
           expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
         }),
         ordersInBook: [
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
           createRandomOrder({
             type: OrderTypeEnum.Buy,
             unitValue: 100,
-            quantity: 100,
+            shares: 100,
             expirationType: OrderExpirationTypeEnum.GoodTillCancelled,
           }),
         ],
       },
     ])(
-      'should return the quantity and total value executed of the $order.type Order and all the matches quantities for $ordersInBook.0.type Order',
+      'should return the shares and total value executed of the $order.type Order and all the matches quantities for $ordersInBook.0.type Order',
       ({ order, ordersInBook }) => {
-        const totalOrdersInBookQuantity = _.sumBy(ordersInBook, x => x.quantity);
+        const totalOrdersInBookShares = _.sumBy(ordersInBook, x => x.shares);
         const totalOrdersInBookValue = _.sumBy(ordersInBook, x => x.unitValue);
 
-        const remainingExecutedOrderQuantity = order.quantity - totalOrdersInBookQuantity;
+        const remainingExecutedOrderShares = order.shares - totalOrdersInBookShares;
 
         const orderBook = new OrderBook();
 
@@ -726,15 +726,15 @@ describe('OrderBook Domain', () => {
 
         const result = orderBook.executeOrder(order);
 
-        expect(result.executedOrder.quantity).toEqual(totalOrdersInBookQuantity);
+        expect(result.executedOrder.shares).toEqual(totalOrdersInBookShares);
         expect(result.executedOrder.status).toEqual(OrderStatusEnum.PartiallyFilled);
         expect(result.executedOrder.totalValue).toEqual(totalOrdersInBookValue);
 
-        expect(_.sumBy(result.executedOrderMatches, x => x.quantity)).toEqual(totalOrdersInBookQuantity);
+        expect(_.sumBy(result.executedOrderMatches, x => x.shares)).toEqual(totalOrdersInBookShares);
         expect(result.executedOrderMatches.every(x => x.status === OrderStatusEnum.Filled)).toBe(true);
 
         expect(orderBook['orders'][order.type][0].id).toEqual(order.id);
-        expect(orderBook['orders'][order.type][0].quantity).toEqual(remainingExecutedOrderQuantity);
+        expect(orderBook['orders'][order.type][0].shares).toEqual(remainingExecutedOrderShares);
         expect(orderBook['orders'][order.type][0].unitValue).toEqual(order.unitValue);
         expect(orderBook['orders'][order.type][0].createdAtTimestamp).toEqual(order.createdAtTimestamp);
         expect(orderBook['orders'][order.type][0].expirationType).toEqual(order.expirationType);

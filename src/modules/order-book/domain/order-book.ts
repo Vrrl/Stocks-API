@@ -42,7 +42,7 @@ export class OrderBook {
     const executionOrderResult = ExecutedOrderResultBuilder.createResultOf(newOrder);
 
     const oppositeTypeOrders = this.getOppositeTypeOrders(newOrder.type);
-    let quantityToBeFilled = newOrder.quantity;
+    let sharesToBeFilled = newOrder.shares;
 
     const matchedOrders: Order[] = [];
 
@@ -65,32 +65,31 @@ export class OrderBook {
 
       matchedOrders.push(oppositeTypeOrder);
 
-      quantityToBeFilled =
-        quantityToBeFilled > oppositeTypeOrder.quantity ? quantityToBeFilled - oppositeTypeOrder.quantity : 0;
+      sharesToBeFilled = sharesToBeFilled > oppositeTypeOrder.shares ? sharesToBeFilled - oppositeTypeOrder.shares : 0;
 
-      if (quantityToBeFilled === 0) {
+      if (sharesToBeFilled === 0) {
         break;
       }
     }
 
-    const matchedOrdersQuantities = _.sumBy(matchedOrders, matchedOrder => matchedOrder.quantity);
+    const matchedOrdersQuantities = _.sumBy(matchedOrders, matchedOrder => matchedOrder.shares);
 
-    const willNewOrderBeFilled = matchedOrdersQuantities >= newOrder.quantity;
+    const willNewOrderBeFilled = matchedOrdersQuantities >= newOrder.shares;
 
     if (newOrder.expirationType !== OrderExpirationTypeEnum.FillOrKill || willNewOrderBeFilled) {
       for (const matchedOrder of matchedOrders) {
-        const matchedOrderQuantity = Math.min(newOrder.quantity, matchedOrder.quantity);
+        const matchedOrderShares = Math.min(newOrder.shares, matchedOrder.shares);
 
         const matchedOrderValue = newOrder.type === OrderTypeEnum.Sell ? newOrder.unitValue : matchedOrder.unitValue;
 
         const orderMatchedStatus = executionOrderResult.addOrderMatch(
           matchedOrder,
-          matchedOrderQuantity,
+          matchedOrderShares,
           matchedOrderValue,
         );
 
         if (orderMatchedStatus === OrderStatusEnum.PartiallyFilled) {
-          matchedOrder.partiallyExecute(matchedOrderQuantity);
+          matchedOrder.partiallyExecute(matchedOrderShares);
         } else {
           this.removeOrder(matchedOrder);
         }

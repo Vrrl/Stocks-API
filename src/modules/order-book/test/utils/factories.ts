@@ -21,7 +21,7 @@ export function createRandomOrder(payload?: Partial<Order>) {
     createdAtTimestamp: payload?.createdAtTimestamp ?? new Date().valueOf(),
     expirationTimestamp,
     expirationType,
-    quantity: payload?.quantity ?? faker.number.int() * 100,
+    shares: payload?.shares ?? faker.number.int() * 100,
     status: payload?.status ?? OrderStatusEnum.Pending,
   });
 }
