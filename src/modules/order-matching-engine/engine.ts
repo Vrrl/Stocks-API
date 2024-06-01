@@ -15,9 +15,10 @@ export class Engine {
     private readonly orderBook: OrderBook,
   ) {}
 
-  private processOrderCreated(content: any) {
+  private processOrderCreated(content: unknown) {
     const { order } = MessageContentParser.parseOrderCreated(content);
     const executionResult = this.orderBook.executeOrder(order);
+
     console.log(executionResult);
   }
 

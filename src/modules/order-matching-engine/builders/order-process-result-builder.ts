@@ -5,7 +5,7 @@ import { OrderTypeEnum } from '../domain/order-type-enum';
 import { OrderExpirationTypeEnum } from '../domain/order-expiration-type-enum';
 import { ExecutedOrderResult } from '../dtos/executed-order-result';
 
-type ExecutedOrderProps = {
+type ProcessedOrderProps = {
   id: string;
   type: OrderTypeEnum;
   expirationType: OrderExpirationTypeEnum;
@@ -18,8 +18,8 @@ type ExecutedOrderProps = {
   executedTotalValue: number;
 };
 
-class ExecutedOrder {
-  constructor(public props: ExecutedOrderProps) {}
+class ProcessedOrder {
+  constructor(public props: ProcessedOrderProps) {}
 
   get executedStatus(): OrderStatusEnum {
     const isFilled = this.props.executedShares === this.props.initialShares;
@@ -40,21 +40,27 @@ class ExecutedOrder {
   get remainingShares(): number {
     return this.props.initialShares - this.props.executedShares;
   }
+
+  get executedUnitValue(): number {
+    return this.props.executedTotalValue / this.props.executedShares;
+  }
 }
 
-export class ExecutedOrderResultBuilder {
-  constructor({ executedOrder }: { executedOrder: ExecutedOrder }) {
+export class OrderProcessResultBuilder {
+  constructor({ executedOrder }: { executedOrder: ProcessedOrder }) {
     this.executedOrder = executedOrder;
     this.executedOrderMatches = [];
+    this.runtimeChangedOrders = [];
     this.processedAtEpoch = moment().valueOf();
   }
 
-  executedOrder: ExecutedOrder;
-  executedOrderMatches: ExecutedOrder[];
+  executedOrder: ProcessedOrder;
+  executedOrderMatches: ProcessedOrder[];
+  runtimeChangedOrders: Order[];
   processedAtEpoch: number;
 
   static createResultOf(order: Order) {
-    const executedOrder = new ExecutedOrder({
+    const executedOrder = new ProcessedOrder({
       id: order.id,
       type: order.type,
       expirationType: order.expirationType,
@@ -66,11 +72,11 @@ export class ExecutedOrderResultBuilder {
       executedShares: 0,
       executedTotalValue: 0,
     });
-    return new ExecutedOrderResultBuilder({ executedOrder });
+    return new OrderProcessResultBuilder({ executedOrder });
   }
 
   public addOrderMatch(matchedOrder: Order, matchedShares: number, matchedValue: number): OrderStatusEnum {
-    const executedOrderMatch = new ExecutedOrder({
+    const executedOrderMatch = new ProcessedOrder({
       id: matchedOrder.id,
       type: matchedOrder.type,
       expirationType: matchedOrder.expirationType,
@@ -90,7 +96,11 @@ export class ExecutedOrderResultBuilder {
     return executedOrderMatch.executedStatus;
   }
 
-  getRemainingExecutedOrder(): Order | null {
+  public addRuntimeChangedOrder(order: Order) {
+    this.runtimeChangedOrders.push(order);
+  }
+
+  public getRemainingExecutedOrder(): Order | null {
     if (![OrderStatusEnum.PartiallyFilled, OrderStatusEnum.Pending].includes(this.executedOrder.executedStatus)) {
       return null;
     }
@@ -117,6 +127,7 @@ export class ExecutedOrderResultBuilder {
       status: this.executedOrder.executedStatus,
       type: this.executedOrder.props.type,
       totalValue: this.executedOrder.props.executedTotalValue,
+      unitValue: this.executedOrder.executedUnitValue,
     };
 
     const executedOrderMatches = this.executedOrderMatches.map(orderMatch => ({
@@ -126,11 +137,23 @@ export class ExecutedOrderResultBuilder {
       status: orderMatch.executedStatus,
       type: orderMatch.props.type,
       totalValue: orderMatch.props.executedTotalValue,
+      unitValue: orderMatch.executedUnitValue,
+    }));
+
+    const runtimeChangedOrders = this.runtimeChangedOrders.map(order => ({
+      id: order.props.id,
+      expirationType: order.props.expirationType,
+      shares: order.props.shares,
+      status: order.props.status,
+      type: order.props.type,
+      totalValue: order.totalValue,
+      unitValue: order.props.unitValue,
     }));
 
     const executedOrderResult: ExecutedOrderResult = {
       executedOrder,
       executedOrderMatches,
+      runtimeChangedOrders,
       processedAtEpoch: this.processedAtEpoch,
     };
 

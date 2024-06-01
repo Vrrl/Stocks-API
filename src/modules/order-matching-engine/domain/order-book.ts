@@ -1,7 +1,7 @@
 import { Order } from './order';
 import { OrderExpirationTypeEnum } from './order-expiration-type-enum';
 import { OrderTypeEnum } from './order-type-enum';
-import { ExecutedOrderResultBuilder } from '../builders/executed-order-result-builder';
+import { OrderProcessResultBuilder } from '../builders/order-process-result-builder';
 import { OrderStatusEnum } from './order-status-enum';
 import _ from 'lodash';
 import { ExecutedOrderResult } from '../dtos/executed-order-result';
@@ -39,7 +39,7 @@ export class OrderBook {
   }
 
   public executeOrder(newOrder: Order): ExecutedOrderResult {
-    const executionOrderResult = ExecutedOrderResultBuilder.createResultOf(newOrder);
+    const orderProcessResult = OrderProcessResultBuilder.createResultOf(newOrder);
 
     const oppositeTypeOrders = this.getOppositeTypeOrders(newOrder.type);
     let sharesToBeFilled = newOrder.shares;
@@ -49,9 +49,11 @@ export class OrderBook {
     for (const oppositeTypeOrder of oppositeTypeOrders) {
       if (
         oppositeTypeOrder.expirationTimestamp &&
-        oppositeTypeOrder.expirationTimestamp < executionOrderResult.processedAtEpoch
+        oppositeTypeOrder.expirationTimestamp < orderProcessResult.processedAtEpoch
       ) {
+        oppositeTypeOrder.expire();
         this.removeOrder(oppositeTypeOrder);
+        orderProcessResult.addRuntimeChangedOrder(oppositeTypeOrder);
         continue;
       }
 
@@ -82,7 +84,7 @@ export class OrderBook {
 
         const matchedOrderValue = newOrder.type === OrderTypeEnum.Sell ? newOrder.unitValue : matchedOrder.unitValue;
 
-        const orderMatchedStatus = executionOrderResult.addOrderMatch(
+        const orderMatchedStatus = orderProcessResult.addOrderMatch(
           matchedOrder,
           matchedOrderShares,
           matchedOrderValue,
@@ -95,13 +97,13 @@ export class OrderBook {
         }
       }
 
-      const remainingNewOrder = executionOrderResult.getRemainingExecutedOrder();
+      const remainingNewOrder = orderProcessResult.getRemainingExecutedOrder();
 
       if (remainingNewOrder) {
         this.addOrder(remainingNewOrder);
       }
     }
 
-    return executionOrderResult.getResult();
+    return orderProcessResult.getResult();
   }
 }

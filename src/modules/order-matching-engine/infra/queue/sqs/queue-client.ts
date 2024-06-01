@@ -38,6 +38,7 @@ export class QueueClient implements IQueueClient {
 
     return { messages };
   }
+
   async deleteOrderBookMessage(id: string) {
     const deleteParams = new DeleteMessageCommand({
       QueueUrl: this.ORDER_BOOK_QUEUE_URL,

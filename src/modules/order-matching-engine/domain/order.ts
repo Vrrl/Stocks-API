@@ -63,9 +63,20 @@ export class Order {
   get expirationTimestamp() {
     return this.props.expirationTimestamp;
   }
+  get totalValue() {
+    return this.unitValue * this.shares;
+  }
 
   public partiallyExecute(shares: number) {
     this.props.shares -= shares;
     this.props.status = OrderStatusEnum.PartiallyFilled;
+  }
+
+  public cancel() {
+    this.props.status = OrderStatusEnum.Canceled;
+  }
+
+  public expire() {
+    this.props.status = OrderStatusEnum.Expired;
   }
 }
