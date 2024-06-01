@@ -33,7 +33,7 @@ export class QueueClient implements IQueueClient {
 
         const parsedMessage = JSON.parse(parsedBody.Message ?? '{}');
 
-        return { id: x.ReceiptHandle, order: parsedMessage, type: parsedBody.Subject } as OrderBookMessage;
+        return { id: x.ReceiptHandle, content: parsedMessage, type: parsedBody.Subject } as OrderBookMessage;
       }) ?? [];
 
     return { messages };

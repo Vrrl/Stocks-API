@@ -27,8 +27,8 @@ export class Order extends AggregateRoot<OrderProps> {
     this.validateSelfDatesCorrelation();
   }
 
-  get expirationTimestamp(): number | undefined {
-    return this.props.expirationDate?.getTime();
+  get expirationTimestamp(): number | null {
+    return this.props.expirationDate?.getTime() || null;
   }
 
   get createdAtTimestamp(): number {
@@ -94,8 +94,8 @@ export class Order extends AggregateRoot<OrderProps> {
           );
         }
         break;
-      case OrderExpirationTypeEnum.AllOrNone:
-        break;
+      // case OrderExpirationTypeEnum.AllOrNone:
+      //   break;
       case OrderExpirationTypeEnum.FillOrKill:
         break;
       case OrderExpirationTypeEnum.GoodTillCancelled:

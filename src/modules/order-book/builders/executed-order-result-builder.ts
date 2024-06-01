@@ -9,9 +9,8 @@ type ExecutedOrderProps = {
   id: string;
   type: OrderTypeEnum;
   expirationType: OrderExpirationTypeEnum;
-  createdAtEpoch: number;
-  expirationDate: Date | null;
-  expirationEpoch: number | null;
+  createdAtTimestamp: number;
+  expirationTimestamp: number | null;
   initialStatus: OrderStatusEnum;
   executedQuantity: number;
   initialQuantity: number;
@@ -59,12 +58,11 @@ export class ExecutedOrderResultBuilder {
       id: order.id,
       type: order.type,
       expirationType: order.expirationType,
-      createdAtEpoch: order.createdAtEpoch,
-      expirationDate: order.expirationDate,
-      expirationEpoch: order.expirationEpoch,
+      createdAtTimestamp: order.createdAtTimestamp,
+      expirationTimestamp: order.expirationTimestamp,
       initialQuantity: order.quantity,
       initialStatus: order.status,
-      initialValue: order.value,
+      initialValue: order.unitValue,
       executedQuantity: 0,
       executedTotalValue: 0,
     });
@@ -76,12 +74,11 @@ export class ExecutedOrderResultBuilder {
       id: matchedOrder.id,
       type: matchedOrder.type,
       expirationType: matchedOrder.expirationType,
-      createdAtEpoch: matchedOrder.createdAtEpoch,
-      expirationDate: matchedOrder.expirationDate,
-      expirationEpoch: matchedOrder.expirationEpoch,
+      createdAtTimestamp: matchedOrder.createdAtTimestamp,
+      expirationTimestamp: matchedOrder.expirationTimestamp,
       initialQuantity: matchedOrder.quantity,
       initialStatus: matchedOrder.status,
-      initialValue: matchedOrder.value,
+      initialValue: matchedOrder.unitValue,
       executedQuantity: matchedQuantity,
       executedTotalValue: matchedValue,
     });
@@ -98,17 +95,16 @@ export class ExecutedOrderResultBuilder {
       return null;
     }
 
-    const remainingOrder: Order = {
+    const remainingOrder = new Order({
       id: this.executedOrder.props.id,
-      createdAtEpoch: this.executedOrder.props.createdAtEpoch,
-      expirationDate: this.executedOrder.props.expirationDate,
-      expirationEpoch: this.executedOrder.props.expirationEpoch,
+      createdAtTimestamp: this.executedOrder.props.createdAtTimestamp,
+      expirationTimestamp: this.executedOrder.props.expirationTimestamp,
       expirationType: this.executedOrder.props.expirationType,
       quantity: this.executedOrder.remainingQuantity,
       status: this.executedOrder.executedStatus,
       type: this.executedOrder.props.type,
-      value: this.executedOrder.props.initialValue,
-    };
+      unitValue: this.executedOrder.props.initialValue,
+    });
 
     return remainingOrder;
   }

@@ -5,7 +5,9 @@ import { ExecutedOrderResultBuilder } from '../builders/executed-order-result-bu
 import { OrderStatusEnum } from './order-status-enum';
 import _ from 'lodash';
 import { ExecutedOrderResult } from '../dtos/executed-order-result';
+import { injectable } from 'inversify';
 
+@injectable()
 export class OrderBook {
   private orders: { [OrderTypeEnum.Buy]: Order[]; [OrderTypeEnum.Sell]: Order[] } = {
     [OrderTypeEnum.Buy]: [],
@@ -23,7 +25,7 @@ export class OrderBook {
   public addOrder(order: Order) {
     const ordersList = this.orders[order.type];
     ordersList.push(order);
-    ordersList.sort((a, b) => b.value - a.value || a.createdAtEpoch - b.createdAtEpoch);
+    ordersList.sort((a, b) => b.unitValue - a.unitValue || a.createdAtTimestamp - b.createdAtTimestamp);
   }
 
   public removeOrder(order: Order) {
@@ -46,18 +48,18 @@ export class OrderBook {
 
     for (const oppositeTypeOrder of oppositeTypeOrders) {
       if (
-        oppositeTypeOrder.expirationEpoch &&
-        oppositeTypeOrder.expirationEpoch < executionOrderResult.processedAtEpoch
+        oppositeTypeOrder.expirationTimestamp &&
+        oppositeTypeOrder.expirationTimestamp < executionOrderResult.processedAtEpoch
       ) {
         this.removeOrder(oppositeTypeOrder);
         continue;
       }
 
-      if (newOrder.type === OrderTypeEnum.Buy && newOrder.value < oppositeTypeOrder.value) {
+      if (newOrder.type === OrderTypeEnum.Buy && newOrder.unitValue < oppositeTypeOrder.unitValue) {
         break;
       }
 
-      if (newOrder.type === OrderTypeEnum.Sell && newOrder.value > oppositeTypeOrder.value) {
+      if (newOrder.type === OrderTypeEnum.Sell && newOrder.unitValue > oppositeTypeOrder.unitValue) {
         break;
       }
 
@@ -79,7 +81,7 @@ export class OrderBook {
       for (const matchedOrder of matchedOrders) {
         const matchedOrderQuantity = Math.min(newOrder.quantity, matchedOrder.quantity);
 
-        const matchedOrderValue = newOrder.type === OrderTypeEnum.Sell ? newOrder.value : matchedOrder.value;
+        const matchedOrderValue = newOrder.type === OrderTypeEnum.Sell ? newOrder.unitValue : matchedOrder.unitValue;
 
         const orderMatchedStatus = executionOrderResult.addOrderMatch(
           matchedOrder,
@@ -88,8 +90,7 @@ export class OrderBook {
         );
 
         if (orderMatchedStatus === OrderStatusEnum.PartiallyFilled) {
-          matchedOrder.quantity = matchedOrder.quantity - matchedOrderQuantity;
-          matchedOrder.status = orderMatchedStatus;
+          matchedOrder.partiallyExecute(matchedOrderQuantity);
         } else {
           this.removeOrder(matchedOrder);
         }
