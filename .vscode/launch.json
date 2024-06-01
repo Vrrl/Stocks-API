@@ -41,7 +41,7 @@
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "yarn",
-      "args": ["local:order-book"],
+      "args": ["local:order-matching-engine"],
       "runtimeArgs": ["--inspect=9231"],
       "autoAttachChildProcesses": true,
       "sourceMaps": true,

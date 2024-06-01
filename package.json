@@ -9,7 +9,7 @@
     "deploy:order-management": "sls order-management:deploy",
     "local:order-management": "sls order-management:offline --stage local",
     "local:account-management": "sls account-management:offline --stage local",
-    "local:order-book": "ts-node ./src/modules/order-book/index.ts",
+    "local:order-matching-engine": "ts-node ./src/modules/order-matching-engine/index.ts",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },

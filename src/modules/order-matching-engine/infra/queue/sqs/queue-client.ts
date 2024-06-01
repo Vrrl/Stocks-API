@@ -2,8 +2,8 @@ import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { IQueueClient } from '../queue-client';
 import { DeleteMessageCommand, ReceiveMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
-import { OrderBookPullResponse } from '@src/modules/order-book/dtos/order-book-pull-response';
-import { OrderBookMessage } from '@src/modules/order-book/dtos/order-book-message';
+import { OrderBookPullResponse } from '@src/modules/order-matching-engine/dtos/order-book-pull-response';
+import { OrderBookMessage } from '@src/modules/order-matching-engine/dtos/order-book-message';
 
 @injectable()
 export class QueueClient implements IQueueClient {
