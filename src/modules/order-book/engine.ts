@@ -34,19 +34,14 @@ export class Engine {
     console.log('Starting process loop');
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      console.log('Checking messages...');
       const { messages } = await this.queueClient.pullOrderBookMessages();
-      if (messages) {
-        for (const message of messages) {
-          try {
-            await this.processMessage(message);
-          } catch (error) {
-            console.error(String(error));
-          }
-          await this.queueClient.deleteOrderBookMessage(message.id);
+      for (const message of messages) {
+        try {
+          await this.processMessage(message);
+        } catch (error) {
+          console.error(String(error));
         }
-      } else {
-        console.log('No messages found, awaiting for next pull');
+        await this.queueClient.deleteOrderBookMessage(message.id);
       }
     }
   }
