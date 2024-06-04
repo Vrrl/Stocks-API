@@ -56,6 +56,6 @@ export class OrderRegistrationUseCase implements IUseCase<OrderRegistrationReque
 
     await this.orderCommandRepository.save(newOrder);
 
-    await this.eventNotifier.notifyWithBody(EventNames.OrderCreated, newOrder.toJson(), shareholderId);
+    await this.eventNotifier.notifyWithBody(EventNames.OrderCreated, newOrder.toJson());
   }
 }

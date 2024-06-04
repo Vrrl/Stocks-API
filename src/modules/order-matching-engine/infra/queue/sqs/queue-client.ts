@@ -7,20 +7,20 @@ import { OrderBookMessage } from '@src/modules/order-matching-engine/dtos/order-
 
 @injectable()
 export class QueueClient implements IQueueClient {
-  ORDER_BOOK_QUEUE_URL: string;
+  ORDER_MATCHING_QUEUE_URL: string;
 
   constructor(
     @inject(TYPES.SQSClient)
     private readonly sqsClient: SQSClient,
   ) {
-    this.ORDER_BOOK_QUEUE_URL = 'https://sqs.us-east-1.amazonaws.com/325495160074/TesteRemover.fifo';
+    this.ORDER_MATCHING_QUEUE_URL = 'https://sqs.us-east-1.amazonaws.com/325495160074/OrderMatchingQueue';
   }
 
   async pullOrderBookMessages(): Promise<OrderBookPullResponse> {
     const pullInterval = 20;
 
     const receiveParams = new ReceiveMessageCommand({
-      QueueUrl: this.ORDER_BOOK_QUEUE_URL,
+      QueueUrl: this.ORDER_MATCHING_QUEUE_URL,
       MaxNumberOfMessages: 10,
       WaitTimeSeconds: pullInterval,
     });
@@ -41,7 +41,7 @@ export class QueueClient implements IQueueClient {
 
   async deleteOrderBookMessage(id: string) {
     const deleteParams = new DeleteMessageCommand({
-      QueueUrl: this.ORDER_BOOK_QUEUE_URL,
+      QueueUrl: this.ORDER_MATCHING_QUEUE_URL,
       ReceiptHandle: id,
     });
 

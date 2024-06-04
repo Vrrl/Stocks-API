@@ -8,12 +8,11 @@ import { PublishCommand, PublishCommandInput, SNSClient } from '@aws-sdk/client-
 export class EventNotifier implements IEventNotifier {
   constructor(@inject(TYPES.SNSClient) private snsClient: SNSClient) {}
 
-  async notifyWithBody(eventName: EventNames, body: object, groupId: string): Promise<void> {
+  async notifyWithBody(eventName: EventNames, body: object): Promise<void> {
     const params: PublishCommandInput = {
-      MessageGroupId: groupId,
       Subject: eventName,
       Message: JSON.stringify(body),
-      TopicArn: process.env.SNS_ORDER_TOPIC,
+      TopicArn: process.env.SNS_ORDER_PROCESS_TOPIC,
     };
 
     const command = new PublishCommand(params);

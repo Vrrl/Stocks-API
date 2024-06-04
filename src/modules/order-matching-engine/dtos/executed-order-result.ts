@@ -1,8 +1,9 @@
+import { Order } from '../domain/order';
 import { OrderExpirationTypeEnum } from '../domain/order-expiration-type-enum';
 import { OrderStatusEnum } from '../domain/order-status-enum';
 import { OrderTypeEnum } from '../domain/order-type-enum';
 
-type ProcessedOrder = {
+export type ProcessedOrder = {
   id: string;
   type: OrderTypeEnum;
   expirationType: OrderExpirationTypeEnum;
@@ -10,11 +11,11 @@ type ProcessedOrder = {
   totalValue: number;
   unitValue: number;
   status: OrderStatusEnum;
+  processedAtTimestamp: number;
 };
 
-export interface ExecutedOrderResult {
-  executedOrder: ProcessedOrder;
-  executedOrderMatches: ProcessedOrder[];
-  runtimeChangedOrders: ProcessedOrder[];
-  processedAtEpoch: number;
+export interface ExecutedOrdersResult {
+  targetOrderExecuted?: ProcessedOrder;
+  targetOrderMatches: ProcessedOrder[];
+  runtimeChangedOrders: Order[];
 }

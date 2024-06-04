@@ -1,10 +1,10 @@
 import { Order } from './order';
 import { OrderExpirationTypeEnum } from './order-expiration-type-enum';
 import { OrderTypeEnum } from './order-type-enum';
-import { OrderProcessResultBuilder } from '../builders/order-process-result-builder';
+import { OrderProcessResultBuilder } from '../utils/builders/order-process-result-builder';
 import { OrderStatusEnum } from './order-status-enum';
 import _ from 'lodash';
-import { ExecutedOrderResult } from '../dtos/executed-order-result';
+import { ExecutedOrdersResult } from '../dtos/executed-order-result';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -38,7 +38,7 @@ export class OrderBook {
     }
   }
 
-  public executeOrder(newOrder: Order): ExecutedOrderResult {
+  public executeOrder(newOrder: Order): ExecutedOrdersResult {
     const orderProcessResult = OrderProcessResultBuilder.createResultOf(newOrder);
 
     const oppositeTypeOrders = this.getOppositeTypeOrders(newOrder.type);
@@ -49,7 +49,7 @@ export class OrderBook {
     for (const oppositeTypeOrder of oppositeTypeOrders) {
       if (
         oppositeTypeOrder.expirationTimestamp &&
-        oppositeTypeOrder.expirationTimestamp < orderProcessResult.processedAtEpoch
+        oppositeTypeOrder.expirationTimestamp < orderProcessResult.processedAtTimestamp
       ) {
         oppositeTypeOrder.expire();
         this.removeOrder(oppositeTypeOrder);
@@ -97,7 +97,7 @@ export class OrderBook {
         }
       }
 
-      const remainingNewOrder = orderProcessResult.getRemainingExecutedOrder();
+      const remainingNewOrder = orderProcessResult.getRemainingOrder();
 
       if (remainingNewOrder) {
         this.addOrder(remainingNewOrder);

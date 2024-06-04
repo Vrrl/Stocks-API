@@ -1,4 +1,4 @@
-import { Order } from '../domain/order';
+import { Order } from '../../domain/order';
 
 export class MessageContentParser {
   static parseOrderCreated(content: any) {

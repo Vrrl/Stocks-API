@@ -1,5 +1,6 @@
-import { EventNames } from '../../dtos/event-names';
+import { EventMessage } from './event-message';
 
 export interface IEventNotifier {
-  notifyWithBody(eventName: EventNames, body: object): Promise<void>;
+  notifyOrderTopic(eventMessage: EventMessage): Promise<void>;
+  notifyBatch(eventMessages: EventMessage[]): Promise<void>;
 }

@@ -4,13 +4,17 @@ import { IQueueClient } from './infra/queue/queue-client';
 import { OrderBookMessage } from './dtos/order-book-message';
 import { EventNames } from './dtos/event-names';
 import { OrderBook } from './domain/order-book';
-import { MessageContentParser } from './parsers/message-content-parser';
+import { MessageContentParser } from './utils/parsers/message-content-parser';
+import { PostProcessingParser } from './utils/mappers/post-processing-mapper';
+import { IEventNotifier } from './infra/event/event-notifier';
 
 @injectable()
 export class Engine {
   constructor(
     @inject(TYPES.IQueueClient)
     private readonly queueClient: IQueueClient,
+    @inject(TYPES.IEventNotifier)
+    private readonly eventNotifier: IEventNotifier,
     @inject(TYPES.OrderBook)
     private readonly orderBook: OrderBook,
   ) {}
@@ -19,7 +23,10 @@ export class Engine {
     const { order } = MessageContentParser.parseOrderCreated(content);
     const executionResult = this.orderBook.executeOrder(order);
 
-    console.log(executionResult);
+    const postProcessingEvents = PostProcessingParser.parseExecutionResultToEvents(executionResult);
+    if (postProcessingEvents.length) {
+      this.eventNotifier.notifyBatch(postProcessingEvents);
+    }
   }
 
   private processMessage(message: OrderBookMessage): void {
