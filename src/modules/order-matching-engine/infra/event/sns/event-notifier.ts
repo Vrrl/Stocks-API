@@ -1,4 +1,3 @@
-import { EventNames } from '@src/modules/order-management/domain/event-names';
 import { IEventNotifier } from '../event-notifier';
 import { inject, injectable } from 'inversify';
 import TYPES from '@src/core/types';

@@ -7,5 +7,5 @@ export const DYNAMO_ORDERS_TABLE = `orders-${STAGE}`;
 export const COGNITO_USER_POOL_ID = `#TODO`;
 export const COGNITO_CLIENT_ID = `#TODO`;
 export const SNS_ORDER_PROCESS_TOPIC = `arn:aws:sns:us-east-1:325495160074:OrderProcessTopic`;
-export const SNS_ORDER_POSTPROCESS_TOPIC = `arn:aws:sqs:us-east-1:325495160074:OrderMatchingQueue`;
+export const SNS_ORDER_POSTPROCESS_TOPIC = `arn:aws:sns:us-east-1:325495160074:MatchingEngineTopic`;
 //TODO: REMOVER DO GIT

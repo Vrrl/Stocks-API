@@ -1,6 +1,6 @@
-import { EventNames } from '../../dtos/event-names';
+import { MatchingEngineEventNames } from '../../domain/events/matching-engine-event-names';
 
 export interface EventMessage {
-  eventName: EventNames;
+  eventName: MatchingEngineEventNames;
   body: object;
 }

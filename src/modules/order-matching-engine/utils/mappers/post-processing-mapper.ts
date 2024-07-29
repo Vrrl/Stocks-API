@@ -1,6 +1,6 @@
+import { MatchingEngineEventNames } from '../../domain/events/matching-engine-event-names';
 import { ExecutedOrdersResult } from '../../dtos/executed-order-result';
 import { EventMessage } from '../../infra/event/event-message';
-import { EventNames } from '../../dtos/event-names';
 
 export class PostProcessingParser {
   static parseExecutionResultToEvents({
@@ -8,12 +8,18 @@ export class PostProcessingParser {
     targetOrderMatches,
     runtimeChangedOrders,
   }: ExecutedOrdersResult): EventMessage[] {
-    const orderExecutedEvents = targetOrderMatches.map(x => ({ eventName: EventNames.OrderExecuted, body: x }));
+    const orderExecutedEvents = targetOrderMatches.map(x => ({
+      eventName: MatchingEngineEventNames.OrderStatusChanged,
+      body: x,
+    }));
     if (targetOrderExecuted) {
-      orderExecutedEvents.push({ eventName: EventNames.OrderExecuted, body: targetOrderExecuted });
+      orderExecutedEvents.push({ eventName: MatchingEngineEventNames.OrderStatusChanged, body: targetOrderExecuted });
     }
 
-    const orderExpiredEvents = runtimeChangedOrders.map(x => ({ eventName: EventNames.OrderExecuted, body: x }));
+    const orderExpiredEvents = runtimeChangedOrders.map(x => ({
+      eventName: MatchingEngineEventNames.OrderStatusChanged,
+      body: x,
+    }));
 
     const events = [...orderExpiredEvents, ...orderExecutedEvents];
 

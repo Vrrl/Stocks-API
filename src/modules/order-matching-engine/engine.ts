@@ -2,7 +2,7 @@ import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { IQueueClient } from './infra/queue/queue-client';
 import { OrderBookMessage } from './dtos/order-book-message';
-import { EventNames } from './dtos/event-names';
+import { OrderEventNames } from './domain/events/order-event-names';
 import { OrderBook } from './domain/order-book';
 import { MessageContentParser } from './utils/parsers/message-content-parser';
 import { PostProcessingParser } from './utils/mappers/post-processing-mapper';
@@ -31,7 +31,7 @@ export class Engine {
 
   private processMessage(message: OrderBookMessage): void {
     switch (message.type) {
-      case EventNames.OrderCreated:
+      case OrderEventNames.OrderCreated:
         return this.processOrderCreated(message.content);
       default:
         return;
