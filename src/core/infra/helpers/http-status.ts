@@ -3,6 +3,7 @@ import { HttpResponse } from '../http';
 const defaultHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Credentials': true,
+  'Content-Type': 'application/json',
 };
 
 export const ok = (body?: any, headers: object = {}): HttpResponse => {
@@ -10,7 +11,6 @@ export const ok = (body?: any, headers: object = {}): HttpResponse => {
     statusCode: 200,
     body,
     headers: {
-      'Content-Type': 'application/json',
       ...headers,
       ...defaultHeaders,
     },
@@ -22,7 +22,17 @@ export const created = (body?: any, headers: object = {}): HttpResponse => {
     statusCode: 201,
     body,
     headers: {
-      'Content-Type': 'application/json',
+      ...headers,
+      ...defaultHeaders,
+    },
+  };
+};
+
+export const accepted = (body?: any, headers: object = {}): HttpResponse => {
+  return {
+    statusCode: 202,
+    body,
+    headers: {
       ...headers,
       ...defaultHeaders,
     },
@@ -34,7 +44,6 @@ export const badRequest = (error: object, headers: object = {}): HttpResponse =>
     statusCode: 400,
     body: { message: error },
     headers: {
-      'Content-Type': 'application/json',
       ...headers,
       ...defaultHeaders,
     },
@@ -46,7 +55,6 @@ export const Unauthorized = (message?: string, headers: object = {}): HttpRespon
     statusCode: 401,
     body: { message: message || 'Unauthorized' },
     headers: {
-      'Content-Type': 'application/json',
       ...headers,
       ...defaultHeaders,
     },
@@ -58,7 +66,6 @@ export const forbidden = (error: Error, headers: object = {}): HttpResponse => {
     statusCode: 403,
     body: { message: error.message },
     headers: {
-      'Content-Type': 'application/json',
       ...headers,
       ...defaultHeaders,
     },
@@ -70,7 +77,6 @@ export const serverError = (headers: object = {}): HttpResponse => {
     statusCode: 500,
     body: { message: 'Internal server error' },
     headers: {
-      'Content-Type': 'application/json',
       ...headers,
       ...defaultHeaders,
     },

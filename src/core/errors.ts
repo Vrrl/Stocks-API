@@ -18,3 +18,5 @@ export class InfrastructureError extends Error {
     Object.setPrototypeOf(this, InfrastructureError.prototype);
   }
 }
+
+export const CoreErrors = { InfrastructureError, UseCaseError, InvalidPropsError };

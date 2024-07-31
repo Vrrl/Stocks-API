@@ -1,6 +1,6 @@
 import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
-import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, QueryCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { Order } from '../../../domain/order';
 import { throwIfUndefinedOrEmptyString } from '@src/core/infra/helpers/validation';
 import { IOrderQueryRepository } from '../order-query-repository';
@@ -35,5 +35,21 @@ export class OrderQueryRepository implements IOrderQueryRepository {
     if (!result.Items) return [];
 
     return result.Items.map(x => OrderMap.toDomain(unmarshall(x)));
+  }
+
+  async getById(shareholderId: string, id: string): Promise<Order | undefined> {
+    const queryCommand = new GetItemCommand({
+      TableName: this.DYNAMO_ORDERS_TABLE,
+      Key: marshall({
+        shareholderId,
+        id,
+      }),
+    });
+
+    const result = await this.dynamoClient.send(queryCommand);
+
+    if (!result.Item) return undefined;
+
+    return OrderMap.toDomain(unmarshall(result.Item));
   }
 }

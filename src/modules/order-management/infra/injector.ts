@@ -19,6 +19,7 @@ import { loadEnvFromDictionary } from '@src/core/utils/loadEnvFromDictionary';
 import { OrderListUseCase } from '../use-cases/order-list/order-list';
 import { IOrderQueryRepository } from './db/order-query-repository';
 import { OrderQueryRepository } from './db/dynamo/order-query-repository';
+import { OrderCancelationUseCase } from '../use-cases/order-cancelation/order-cancelation';
 
 loadEnvFromDictionary(providerEnv);
 
@@ -46,6 +47,7 @@ container.bind<IOrderQueryRepository>(TYPES.IOrderQueryRepository).to(OrderQuery
 container.bind<IEventNotifier>(TYPES.IEventNotifier).to(EventNotifier);
 
 // UseCases
+container.bind<OrderCancelationUseCase>(TYPES.OrderCancelationUseCase).to(OrderCancelationUseCase);
 container.bind<OrderRegistrationUseCase>(TYPES.OrderRegistrationUseCase).to(OrderRegistrationUseCase);
 container.bind<OrderListUseCase>(TYPES.OrderListUseCase).to(OrderListUseCase);
 

@@ -1,11 +1,11 @@
 import { AggregateRoot } from '@src/core/domain/aggregate-root';
-import * as CoreErrors from '@src/core/errors';
 import { OrderStatusEnum } from './order-status-enum';
 import { OrderTypeEnum } from './order-type-enum';
 import { OrderExpirationTypeEnum } from './order-expiration-type-enum';
 import { FinantialNumber } from '@src/core/domain/shared/finantial-number';
 import { exhaustiveGuard } from '@src/core/utils/exhaustiveGuard';
 import { isBefore, isSameDay } from 'date-fns';
+import { CoreErrors } from '@src/core/errors';
 
 interface OrderProps {
   shareholderId: string;

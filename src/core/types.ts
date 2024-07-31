@@ -20,6 +20,8 @@ const TYPES = {
   SignUpConfirmUseCase: Symbol.for('SignUpConfirmUseCase'),
   SignUpResendVerificationCodeUseCase: Symbol.for('SignUpResendVerificationCodeUseCase'),
   LogInUseCase: Symbol.for('LogInUseCase'),
+
+  OrderCancelationUseCase: Symbol.for('OrderCancelationUseCase'),
   OrderRegistrationUseCase: Symbol.for('OrderRegistrationUseCase'),
   OrderListUseCase: Symbol.for('OrderListUseCase'),
 
