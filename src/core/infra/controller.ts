@@ -1,6 +1,5 @@
 import { HttpRequest, HttpResponse } from '@core/infra/http';
 import * as httpStatus from './helpers/http-status';
-import { HttpException } from '@src/core/infra/errors/http';
 import { z } from 'zod';
 import { injectable } from 'inversify';
 import { AuthenticationLevel } from './authentication/authentication-level';
@@ -8,6 +7,7 @@ import TYPES from '../types';
 import { IAuthenticationService } from '@src/infra/authentication/services/authentication-service';
 import { User } from '@src/infra/authentication/domain/user';
 import container from '@src/modules/account-management/infra/injector';
+import { UseCaseError, ValidationError } from '../errors';
 
 export type ControllerContext = { user?: User };
 
@@ -54,7 +54,7 @@ export abstract class Controller {
 
       return await this.perform(httpRequest, context);
     } catch (error) {
-      if (error instanceof HttpException) {
+      if (error instanceof ValidationError || error instanceof UseCaseError) {
         return {
           statusCode: error.statusCode,
           body: { message: error.message },

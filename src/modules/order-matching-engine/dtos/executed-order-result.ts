@@ -7,15 +7,15 @@ export type ProcessedOrder = {
   id: string;
   type: OrderTypeEnum;
   expirationType: OrderExpirationTypeEnum;
-  shares: number;
-  totalValue: number;
-  unitValue: number;
-  status: OrderStatusEnum;
+  executedShares: number;
+  executedTotalValue: number;
+  executedUnitValue: number;
+  currentStatus: OrderStatusEnum;
   processedAtTimestamp: number;
 };
 
 export interface ExecutedOrdersResult {
   targetOrderExecuted?: ProcessedOrder;
   targetOrderMatches: ProcessedOrder[];
-  runtimeChangedOrders: Order[];
+  expiredOrders: Order[];
 }

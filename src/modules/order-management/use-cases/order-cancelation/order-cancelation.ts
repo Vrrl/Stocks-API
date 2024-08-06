@@ -1,10 +1,7 @@
 import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { IUseCase } from '@src/core/use-case';
-import { Order } from '../../domain/order';
-import { v4 as uuid } from 'uuid';
 import { OrderStatusEnum } from '../../domain/order-status-enum';
-import { IOrderCommandRepository } from '../../infra/db/order-command-repository';
 import { IEventNotifier } from '../../infra/event/event-notifier';
 import { EventNames } from '../../domain/event-names';
 import { IOrderQueryRepository } from '../../infra/db/order-query-repository';
@@ -30,12 +27,16 @@ export class OrderCancelationUseCase implements IUseCase<OrderCancelationRequest
     const targetOrder = await this.orderQueryRepository.getById(shareholderId, orderId);
 
     if (!targetOrder) {
-      throw new CoreErrors.UseCaseError(OrderCancelationUseCase.ClassErrors.UseCaseError.TargetOrder.ORDER_NOT_FOUND);
+      throw new CoreErrors.ValidationError(
+        OrderCancelationUseCase.ClassErrors.UseCaseError.TargetOrder.ORDER_NOT_FOUND,
+        404,
+      );
     }
 
     if (targetOrder.props.shareholderId !== shareholderId) {
-      throw new CoreErrors.UseCaseError(
+      throw new CoreErrors.ValidationError(
         OrderCancelationUseCase.ClassErrors.UseCaseError.TargetOrder.ORDER_WITH_DIFFERENT_SHAREHOLDER,
+        403,
       );
     }
 
@@ -50,10 +51,11 @@ export class OrderCancelationUseCase implements IUseCase<OrderCancelationRequest
     ) {
       throw new CoreErrors.UseCaseError(
         OrderCancelationUseCase.ClassErrors.UseCaseError.TargetOrder.ORDER_STATUS_NOT_ELEGIBLE,
+        409,
       );
     }
 
-    await this.eventNotifier.notifyWithBody(EventNames.OrderCanceled, { orderId });
+    await this.eventNotifier.notifyWithBody(EventNames.OrderCanceled, targetOrder.toJson());
   }
 
   static ClassErrors = {

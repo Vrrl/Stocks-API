@@ -1,6 +1,6 @@
-import { EventMessage } from './event-message';
+import { PostProcessingMessage } from './post-processing-message';
 
 export interface IEventNotifier {
-  notifyOrderTopic(eventMessage: EventMessage): Promise<void>;
-  notifyBatch(eventMessages: EventMessage[]): Promise<void>;
+  notifyOrderTopic(eventMessage: PostProcessingMessage): Promise<void>;
+  notifyBatch(eventMessages: PostProcessingMessage[]): Promise<void>;
 }

@@ -34,7 +34,7 @@ export class OrderBook {
     const targetIndex = ordersList.findIndex(x => x.id === order.id);
 
     if (targetIndex >= 0) {
-      ordersList.splice(targetIndex, 1);
+      return ordersList.splice(targetIndex, 1)[0];
     }
   }
 
@@ -53,7 +53,7 @@ export class OrderBook {
       ) {
         oppositeTypeOrder.expire();
         this.removeOrder(oppositeTypeOrder);
-        orderProcessResult.addRuntimeChangedOrder(oppositeTypeOrder);
+        orderProcessResult.addExpiredOrder(oppositeTypeOrder);
         continue;
       }
 

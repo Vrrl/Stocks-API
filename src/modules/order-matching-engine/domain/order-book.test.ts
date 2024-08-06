@@ -140,7 +140,7 @@ describe('OrderBook Domain', () => {
         ],
       },
     ])(
-      'should not return matches for a $order.type Order and a $ordersInBook.0.type Order $ordersInBook.0.expirationType with expirationDate $ordersInBook.0.expirationDate and return expired runtimeChangedOrders and remove expired Order from orderBook and add new order to the book',
+      'should not return matches for a $order.type Order and a $ordersInBook.0.type Order $ordersInBook.0.expirationType with expirationDate $ordersInBook.0.expirationDate and return expired expiredOrders and remove expired Order from orderBook and add new order to the book',
       ({ order, ordersInBook }) => {
         const orderBook = new OrderBook();
 
@@ -150,8 +150,8 @@ describe('OrderBook Domain', () => {
 
         expect(result.targetOrderMatches.length).toEqual(0);
         expect(result.targetOrderExecuted).toEqual(undefined);
-        expect(result.runtimeChangedOrders.length).toEqual(ordersInBook.length);
-        expect(result.runtimeChangedOrders.every(x => x.status === OrderStatusEnum.Expired)).toBe(true);
+        expect(result.expiredOrders.length).toEqual(ordersInBook.length);
+        expect(result.expiredOrders.every(x => x.status === OrderStatusEnum.Expired)).toBe(true);
         expect(orderBook['orders'][ordersInBook[0].type].length).toEqual(0);
         expect(orderBook['orders'][order.type][0]).toEqual(order);
       },
@@ -262,9 +262,9 @@ describe('OrderBook Domain', () => {
 
         const result = orderBook.executeOrder(order);
 
-        expect(result.targetOrderExecuted?.status).toBe(OrderStatusEnum.Canceled);
+        expect(result.targetOrderExecuted?.currentStatus).toBe(OrderStatusEnum.Canceled);
         expect(result.targetOrderMatches.length).toEqual(0);
-        expect(result.runtimeChangedOrders.length).toEqual(0);
+        expect(result.expiredOrders.length).toEqual(0);
         expect(orderBook['orders'][order.type].length).toBe(0);
         if (ordersInBook.length) {
           expect(orderBook['orders'][ordersInBook[0].type].length).toBe(ordersInBook.length);
@@ -392,7 +392,7 @@ describe('OrderBook Domain', () => {
 
         expect(result.targetOrderMatches.length).toEqual(0);
         expect(result.targetOrderExecuted).toEqual(undefined);
-        expect(result.runtimeChangedOrders.length).toEqual(0);
+        expect(result.expiredOrders.length).toEqual(0);
         expect(orderBook['orders'][order.type].find(x => x.id === order.id)).toEqual(order);
       },
     );
@@ -482,13 +482,13 @@ describe('OrderBook Domain', () => {
 
         const result = orderBook.executeOrder(order);
 
-        expect(result.targetOrderExecuted?.status).toBe(OrderStatusEnum.Filled);
+        expect(result.targetOrderExecuted?.currentStatus).toBe(OrderStatusEnum.Filled);
 
         expect(result.targetOrderMatches.length).toEqual(ordersInBook.length);
         expect(result.targetOrderMatches.every(x => ordersInBook.some(y => y.id === x.id))).toBe(true);
-        expect(result.targetOrderMatches.every(x => x.status === OrderStatusEnum.Filled)).toBe(true);
+        expect(result.targetOrderMatches.every(x => x.currentStatus === OrderStatusEnum.Filled)).toBe(true);
 
-        expect(result.runtimeChangedOrders.length).toEqual(0);
+        expect(result.expiredOrders.length).toEqual(0);
 
         expect(orderBook['orders'][order.type].length).toEqual(0);
         expect(orderBook['orders'][ordersInBook[0].type].length).toEqual(0);
@@ -582,13 +582,13 @@ describe('OrderBook Domain', () => {
 
         const result = orderBook.executeOrder(order);
 
-        expect(result.targetOrderExecuted?.status).toBe(OrderStatusEnum.PartiallyFilled);
+        expect(result.targetOrderExecuted?.currentStatus).toBe(OrderStatusEnum.PartiallyFilled);
 
         expect(result.targetOrderMatches.length).toEqual(ordersInBook.length);
         expect(result.targetOrderMatches.every(x => ordersInBook.some(y => y.id === x.id))).toBe(true);
-        expect(result.targetOrderMatches.every(x => x.status === OrderStatusEnum.Filled)).toBe(true);
+        expect(result.targetOrderMatches.every(x => x.currentStatus === OrderStatusEnum.Filled)).toBe(true);
 
-        expect(result.runtimeChangedOrders.length).toEqual(0);
+        expect(result.expiredOrders.length).toEqual(0);
 
         expect(orderBook['orders'][order.type].length).toEqual(1);
         expect(orderBook['orders'][ordersInBook[0].type].length).toEqual(0);
@@ -637,13 +637,13 @@ describe('OrderBook Domain', () => {
 
         const result = orderBook.executeOrder(order);
 
-        expect(result.targetOrderExecuted?.status).toBe(OrderStatusEnum.Filled);
+        expect(result.targetOrderExecuted?.currentStatus).toBe(OrderStatusEnum.Filled);
 
         expect(result.targetOrderMatches.length).toEqual(ordersInBook.length);
         expect(result.targetOrderMatches.every(x => ordersInBook.some(y => y.id === x.id))).toBe(true);
-        expect(result.targetOrderMatches.every(x => x.status === OrderStatusEnum.PartiallyFilled)).toBe(true);
+        expect(result.targetOrderMatches.every(x => x.currentStatus === OrderStatusEnum.PartiallyFilled)).toBe(true);
 
-        expect(result.runtimeChangedOrders.length).toEqual(0);
+        expect(result.expiredOrders.length).toEqual(0);
 
         expect(orderBook['orders'][order.type].length).toEqual(0);
         expect(orderBook['orders'][ordersInBook[0].type].length).toEqual(1);
@@ -742,15 +742,15 @@ describe('OrderBook Domain', () => {
 
         const result = orderBook.executeOrder(order);
 
-        expect(result.targetOrderExecuted?.shares).toEqual(totalOrdersInBookShares);
-        expect(result.targetOrderExecuted?.status).toEqual(OrderStatusEnum.PartiallyFilled);
-        expect(result.targetOrderExecuted?.totalValue).toEqual(totalOrdersInBookValue);
+        expect(result.targetOrderExecuted?.executedShares).toEqual(totalOrdersInBookShares);
+        expect(result.targetOrderExecuted?.currentStatus).toEqual(OrderStatusEnum.PartiallyFilled);
+        expect(result.targetOrderExecuted?.executedTotalValue).toEqual(totalOrdersInBookValue);
 
         expect(result.targetOrderMatches.length).toEqual(ordersInBook.length);
-        expect(_.sumBy(result.targetOrderMatches, x => x.shares)).toEqual(totalOrdersInBookShares);
-        expect(result.targetOrderMatches.every(x => x.status === OrderStatusEnum.Filled)).toBe(true);
+        expect(_.sumBy(result.targetOrderMatches, x => x.executedShares)).toEqual(totalOrdersInBookShares);
+        expect(result.targetOrderMatches.every(x => x.currentStatus === OrderStatusEnum.Filled)).toBe(true);
 
-        expect(result.runtimeChangedOrders.length).toEqual(0);
+        expect(result.expiredOrders.length).toEqual(0);
 
         expect(orderBook['orders'][order.type][0].id).toEqual(order.id);
         expect(orderBook['orders'][order.type][0].shares).toEqual(remainingExecutedOrderShares);

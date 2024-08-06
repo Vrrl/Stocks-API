@@ -6,8 +6,19 @@ export class InvalidPropsError extends Error {
 }
 
 export class UseCaseError extends Error {
-  constructor(message: string) {
+  statusCode: number;
+  constructor(message: string, statusCode: number = 400) {
     super(message);
+    this.statusCode = statusCode;
+    Object.setPrototypeOf(this, UseCaseError.prototype);
+  }
+}
+
+export class ValidationError extends Error {
+  statusCode: number;
+  constructor(message: string, statusCode: number = 422) {
+    super(message);
+    this.statusCode = statusCode;
     Object.setPrototypeOf(this, UseCaseError.prototype);
   }
 }
@@ -19,4 +30,4 @@ export class InfrastructureError extends Error {
   }
 }
 
-export const CoreErrors = { InfrastructureError, UseCaseError, InvalidPropsError };
+export const CoreErrors = { InfrastructureError, UseCaseError, InvalidPropsError, ValidationError };

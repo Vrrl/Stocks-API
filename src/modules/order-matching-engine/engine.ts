@@ -2,11 +2,13 @@ import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { IQueueClient } from './infra/queue/queue-client';
 import { OrderBookMessage } from './dtos/order-book-message';
-import { OrderEventNames } from './domain/events/order-event-names';
+import { OrderEventType } from './domain/events/order-event-type';
 import { OrderBook } from './domain/order-book';
 import { MessageContentParser } from './utils/parsers/message-content-parser';
-import { PostProcessingParser } from './utils/mappers/post-processing-mapper';
+import { PostProcessingMapper } from './utils/mappers/post-processing-parser';
 import { IEventNotifier } from './infra/event/event-notifier';
+import { OrderCanceledMessage } from './dtos/post-processing-message/order-canceled-message';
+import { OrderMutationFailedMessage } from './dtos/post-processing-message/order-mutation-failed-message';
 
 @injectable()
 export class Engine {
@@ -23,16 +25,31 @@ export class Engine {
     const { order } = MessageContentParser.parseOrderCreated(content);
     const executionResult = this.orderBook.executeOrder(order);
 
-    const postProcessingEvents = PostProcessingParser.parseExecutionResultToEvents(executionResult);
-    if (postProcessingEvents.length) {
-      this.eventNotifier.notifyBatch(postProcessingEvents);
+    const postProcessingMessages = PostProcessingMapper.mapExecutionResultToMessages(executionResult);
+    if (postProcessingMessages.length) {
+      this.eventNotifier.notifyBatch(postProcessingMessages);
+    }
+  }
+
+  private processOrderCanceled(content: unknown) {
+    const { order } = MessageContentParser.parseOrderCanceled(content);
+    const canceledOrder = this.orderBook.removeOrder(order);
+
+    const postProcessingMessage = canceledOrder
+      ? new OrderCanceledMessage(canceledOrder)
+      : new OrderMutationFailedMessage({ id: order.id, reason: OrderMutationFailedMessage.FailErrors.ORDER_NOT_FOUND });
+
+    if (postProcessingMessage) {
+      this.eventNotifier.notifyBatch([postProcessingMessage]);
     }
   }
 
   private processMessage(message: OrderBookMessage): void {
     switch (message.type) {
-      case OrderEventNames.OrderCreated:
+      case OrderEventType.OrderCreated:
         return this.processOrderCreated(message.content);
+      case OrderEventType.OrderCanceled:
+        return this.processOrderCanceled(message.content);
       default:
         return;
     }

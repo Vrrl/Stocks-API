@@ -26,13 +26,11 @@ export class Order {
     throwIfNotNumber(props.unitValue, 'Invalid parameter value in Order Class');
     throwIfNotNumber(props.shares, 'Invalid parameter shares in Order Class');
     throwIfUndefinedOrNotEnum(props.status, OrderStatusEnum, 'Invalid parameter status in Order Class');
-    throwIfNotNumber(props.createdAtTimestamp, 'Invalid parameter createdAtTimestamp in Order Class');
     throwIfUndefinedOrNotEnum(
       props.expirationType,
       OrderExpirationTypeEnum,
       'An valid parameter expirationType is required in Order Class',
     );
-    throwIfUndefined(props.expirationTimestamp, 'Invalid parameter expirationTimestamp in Order Class');
 
     this.props = props;
   }

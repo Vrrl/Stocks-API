@@ -10,16 +10,16 @@ import {
   PublishBatchRequestEntry,
   PublishBatchCommand,
 } from '@aws-sdk/client-sns';
-import { EventMessage } from '../event-message';
+import { PostProcessingMessage } from '../post-processing-message';
 
 @injectable()
 export class EventNotifier implements IEventNotifier {
   constructor(@inject(TYPES.SNSClient) private snsClient: SNSClient) {}
 
-  async notifyOrderTopic({ body, eventName }: EventMessage): Promise<void> {
+  async notifyOrderTopic({ payload, type }: PostProcessingMessage): Promise<void> {
     const params: PublishCommandInput = {
-      Subject: eventName,
-      Message: JSON.stringify(body),
+      Subject: type,
+      Message: JSON.stringify(payload),
       TopicArn: process.env.SNS_ORDER_POSTPROCESS_TOPIC,
     };
 
@@ -27,11 +27,11 @@ export class EventNotifier implements IEventNotifier {
     await this.snsClient.send(command);
   }
 
-  async notifyBatch(eventMessages: EventMessage[]): Promise<void> {
+  async notifyBatch(eventMessages: PostProcessingMessage[]): Promise<void> {
     const preparedMessages: PublishBatchRequestEntry[] = eventMessages.map(x => ({
       Id: uuid(),
-      Subject: x.eventName,
-      Message: JSON.stringify(x.body),
+      Subject: x.type,
+      Message: JSON.stringify(x.payload),
     }));
 
     const params: PublishBatchCommandInput = {

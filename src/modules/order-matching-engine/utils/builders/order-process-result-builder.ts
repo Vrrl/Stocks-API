@@ -21,7 +21,7 @@ type ProcessedOrderProps = {
 class ProcessedOrder {
   constructor(public props: ProcessedOrderProps) {}
 
-  get executedStatus(): OrderStatusEnum {
+  get currentStatus(): OrderStatusEnum {
     const isFilled = this.props.executedShares === this.props.initialShares;
 
     if (this.props.expirationType === OrderExpirationTypeEnum.FillOrKill && !isFilled) {
@@ -50,17 +50,17 @@ export class OrderProcessResultBuilder {
   constructor({ targetOrder }: { targetOrder: ProcessedOrder }) {
     this.targetOrder = targetOrder;
     this.targetOrderMatches = [];
-    this.runtimeChangedOrders = [];
+    this.expiredOrders = [];
     this.processedAtTimestamp = moment().valueOf();
   }
 
   targetOrder: ProcessedOrder;
   targetOrderMatches: ProcessedOrder[];
-  runtimeChangedOrders: Order[];
+  expiredOrders: Order[];
   processedAtTimestamp: number;
 
   get isTargetOrderExecuted() {
-    return this.targetOrder.executedStatus !== OrderStatusEnum.Pending;
+    return this.targetOrder.currentStatus !== OrderStatusEnum.Pending;
   }
 
   static createResultOf(order: Order) {
@@ -97,15 +97,15 @@ export class OrderProcessResultBuilder {
     this.targetOrder.props.executedTotalValue += matchedValue;
     this.targetOrder.props.executedShares += matchedShares;
 
-    return targetOrderMatch.executedStatus;
+    return targetOrderMatch.currentStatus;
   }
 
-  public addRuntimeChangedOrder(order: Order) {
-    this.runtimeChangedOrders.push(order);
+  public addExpiredOrder(order: Order) {
+    this.expiredOrders.push(order);
   }
 
   public getRemainingOrder(): Order | null {
-    if (![OrderStatusEnum.PartiallyFilled, OrderStatusEnum.Pending].includes(this.targetOrder.executedStatus)) {
+    if (![OrderStatusEnum.PartiallyFilled, OrderStatusEnum.Pending].includes(this.targetOrder.currentStatus)) {
       return null;
     }
 
@@ -115,7 +115,7 @@ export class OrderProcessResultBuilder {
       expirationTimestamp: this.targetOrder.props.expirationTimestamp,
       expirationType: this.targetOrder.props.expirationType,
       shares: this.targetOrder.remainingShares,
-      status: this.targetOrder.executedStatus,
+      status: this.targetOrder.currentStatus,
       type: this.targetOrder.props.type,
       unitValue: this.targetOrder.props.initialValue,
     });
@@ -128,26 +128,26 @@ export class OrderProcessResultBuilder {
       targetOrderExecuted: this.isTargetOrderExecuted
         ? {
             id: this.targetOrder.props.id,
-            expirationType: this.targetOrder.props.expirationType,
-            shares: this.targetOrder.props.executedShares,
-            status: this.targetOrder.executedStatus,
             type: this.targetOrder.props.type,
-            totalValue: this.targetOrder.props.executedTotalValue,
-            unitValue: this.targetOrder.executedUnitValue,
+            expirationType: this.targetOrder.props.expirationType,
+            executedShares: this.targetOrder.props.executedShares,
+            executedTotalValue: this.targetOrder.props.executedTotalValue,
+            executedUnitValue: this.targetOrder.executedUnitValue,
+            currentStatus: this.targetOrder.currentStatus,
             processedAtTimestamp: this.processedAtTimestamp,
           }
         : undefined,
       targetOrderMatches: this.targetOrderMatches.map(orderMatch => ({
         id: orderMatch.props.id,
-        expirationType: orderMatch.props.expirationType,
-        shares: orderMatch.props.executedShares,
-        status: orderMatch.executedStatus,
         type: orderMatch.props.type,
-        totalValue: orderMatch.props.executedTotalValue,
-        unitValue: orderMatch.executedUnitValue,
+        expirationType: orderMatch.props.expirationType,
+        executedShares: orderMatch.props.executedShares,
+        executedTotalValue: orderMatch.props.executedTotalValue,
+        executedUnitValue: orderMatch.executedUnitValue,
+        currentStatus: orderMatch.currentStatus,
         processedAtTimestamp: this.processedAtTimestamp,
       })),
-      runtimeChangedOrders: this.runtimeChangedOrders,
+      expiredOrders: this.expiredOrders,
     };
 
     return executedOrdersResult;
