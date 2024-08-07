@@ -9,6 +9,7 @@ import { PostProcessingMapper } from './utils/mappers/post-processing-parser';
 import { IEventNotifier } from './infra/event/event-notifier';
 import { OrderCanceledMessage } from './dtos/post-processing-message/order-canceled-message';
 import { OrderMutationFailedMessage } from './dtos/post-processing-message/order-mutation-failed-message';
+import { OrderEditedMessage } from './dtos/post-processing-message/order-edited-message';
 
 @injectable()
 export class Engine {
@@ -39,8 +40,30 @@ export class Engine {
       ? new OrderCanceledMessage(canceledOrder)
       : new OrderMutationFailedMessage({ id: order.id, reason: OrderMutationFailedMessage.FailErrors.ORDER_NOT_FOUND });
 
-    if (postProcessingMessage) {
-      this.eventNotifier.notifyBatch([postProcessingMessage]);
+    this.eventNotifier.notifyBatch([postProcessingMessage]);
+  }
+
+  private processOrderEdited(content: unknown) {
+    const { order } = MessageContentParser.parseOrderEdited(content);
+    const removedOrder = this.orderBook.removeOrder(order);
+
+    if (!removedOrder) {
+      const failMessage = new OrderMutationFailedMessage({
+        id: order.id,
+        reason: OrderMutationFailedMessage.FailErrors.ORDER_NOT_FOUND,
+      });
+      this.eventNotifier.notifyBatch([failMessage]);
+      return;
+    }
+
+    const executionResult = this.orderBook.executeOrder(order);
+
+    const postProcessingMessages = [new OrderEditedMessage({ order })];
+
+    postProcessingMessages.push(...PostProcessingMapper.mapExecutionResultToMessages(executionResult));
+
+    if (postProcessingMessages.length) {
+      this.eventNotifier.notifyBatch(postProcessingMessages);
     }
   }
 
@@ -50,6 +73,8 @@ export class Engine {
         return this.processOrderCreated(message.content);
       case OrderEventType.OrderCanceled:
         return this.processOrderCanceled(message.content);
+      case OrderEventType.OrderEdited:
+        return this.processOrderEdited(message.content);
       default:
         return;
     }
@@ -66,7 +91,7 @@ export class Engine {
         } catch (error) {
           console.error(String(error));
         }
-        await this.queueClient.deleteOrderBookMessage(message.id);
+        this.queueClient.deleteOrderBookMessage(message.id);
       }
     }
   }

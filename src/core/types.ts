@@ -22,6 +22,7 @@ const TYPES = {
   LogInUseCase: Symbol.for('LogInUseCase'),
 
   OrderCancelationUseCase: Symbol.for('OrderCancelationUseCase'),
+  OrderEditUseCase: Symbol.for('OrderEditUseCase'),
   OrderRegistrationUseCase: Symbol.for('OrderRegistrationUseCase'),
   OrderListUseCase: Symbol.for('OrderListUseCase'),
 

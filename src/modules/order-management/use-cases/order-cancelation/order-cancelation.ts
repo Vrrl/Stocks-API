@@ -40,15 +40,7 @@ export class OrderCancelationUseCase implements IUseCase<OrderCancelationRequest
       );
     }
 
-    if (
-      [
-        OrderStatusEnum.Canceled,
-        OrderStatusEnum.Expired,
-        OrderStatusEnum.Filled,
-        OrderStatusEnum.Rejected,
-        OrderStatusEnum.Suspended,
-      ].includes(targetOrder.props.status)
-    ) {
+    if (![OrderStatusEnum.Pending, OrderStatusEnum.PartiallyFilled].includes(targetOrder.props.status)) {
       throw new CoreErrors.UseCaseError(
         OrderCancelationUseCase.ClassErrors.UseCaseError.TargetOrder.ORDER_STATUS_NOT_ELEGIBLE,
         409,

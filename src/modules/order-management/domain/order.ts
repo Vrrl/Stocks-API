@@ -140,7 +140,42 @@ export class Order extends AggregateRoot<OrderProps> {
     );
   }
 
-  public toJson(): object {
+  setExpirationDate(expirationDate: Date | null) {
+    this.props.expirationDate = expirationDate;
+    this.validateSelfExpirationCoherence();
+    this.validateSelfDatesCorrelation();
+
+    return this;
+  }
+
+  updateExpirationType(expirationType: OrderExpirationTypeEnum, expirationDate?: null | Date) {
+    this.props.expirationType = expirationType;
+    if (expirationDate !== undefined) {
+      this.props.expirationDate = expirationDate;
+    }
+    this.validateSelfExpirationCoherence();
+    this.validateSelfDatesCorrelation();
+
+    return this;
+  }
+
+  updateShares(shares: number) {
+    this.props.shares = shares;
+    this.validateSelfExpirationCoherence();
+    this.validateSelfDatesCorrelation();
+
+    return this;
+  }
+
+  updateUnitValue(unitValue: FinantialNumber) {
+    this.props.unitValue = unitValue;
+    this.validateSelfExpirationCoherence();
+    this.validateSelfDatesCorrelation();
+
+    return this;
+  }
+
+  public toJson() {
     return {
       id: this.id,
       shareholderId: this.props.shareholderId,
