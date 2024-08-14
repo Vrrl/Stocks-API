@@ -1,8 +1,8 @@
 import { AWS } from '@serverless/typescript';
-import { middyRouterAdapter } from '../../../../infra/http/adapters/middy-adapters';
+import { middyHttpRouterAdapter } from '../../../../infra/http/adapters/middy-http-router-adapters';
 import router from '../http/routes';
 
-export const main = middyRouterAdapter(router);
+export const main = middyHttpRouterAdapter(router);
 
 const handlerPath = (context: string) => {
   return `${context.split(process.cwd())[1].substring(1).replace(/\\/g, '/')}`;

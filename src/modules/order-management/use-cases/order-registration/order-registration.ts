@@ -43,7 +43,7 @@ export class OrderRegistrationUseCase implements IUseCase<OrderRegistrationReque
     const newOrder = Order.createFromPrimitive(
       {
         status: OrderStatusEnum.Pending,
-        createdAtDate: new Date().toString(),
+        createdAtDate: new Date().toISOString(),
         shareholderId,
         type,
         unitValue,

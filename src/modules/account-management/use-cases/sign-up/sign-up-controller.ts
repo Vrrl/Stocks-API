@@ -2,13 +2,13 @@ import { inject, injectable } from 'inversify';
 import { z } from 'zod';
 import { created } from '@src/core/infra/helpers/http-status';
 import { HttpRequest, HttpResponse } from '@core/infra/http';
-import { Controller } from '@core/infra/controller';
+import { HttpController } from '@src/core/infra/http-controller';
 import { SignUpUseCase } from './sign-up';
 import TYPES from '@src/core/types';
 import { AuthenticationLevel } from '@src/core/infra/authentication/authentication-level';
 
 @injectable()
-export class SignUpController extends Controller {
+export class SignUpController extends HttpController {
   constructor(@inject(TYPES.SignUpUseCase) private readonly signUpUseCase: SignUpUseCase) {
     super();
   }

@@ -49,6 +49,11 @@ export class Order extends AggregateRoot<OrderProps> {
         FILLED_DATE_BEFORE_EXPIRATION_DATE: 'the provided filledAtDate is before Order expirationDate',
       },
     },
+    UseCaseError: {
+      Cancelation: {
+        INVALID_PREVIOUS_STATUS_CANCELATION: 'Order has a invalid status for cancelation',
+      },
+    },
   };
 
   private validateSelfDatesCorrelation() {
@@ -140,6 +145,16 @@ export class Order extends AggregateRoot<OrderProps> {
     );
   }
 
+  cancel() {
+    if (![OrderStatusEnum.PartiallyFilled, OrderStatusEnum.Pending].includes(this.props.status)) {
+      throw new CoreErrors.UseCaseError(Order.ClassErrors.UseCaseError.Cancelation.INVALID_PREVIOUS_STATUS_CANCELATION);
+    }
+
+    this.props.status = OrderStatusEnum.Canceled;
+
+    return this;
+  }
+
   setExpirationDate(expirationDate: Date | null) {
     this.props.expirationDate = expirationDate;
     this.validateSelfExpirationCoherence();
@@ -184,9 +199,9 @@ export class Order extends AggregateRoot<OrderProps> {
       unitValue: this.props.unitValue.value,
       shares: this.props.shares,
       expirationType: this.props.expirationType,
-      expirationDate: this.props.expirationDate,
+      expirationDate: this.props.expirationDate ? this.props.expirationDate.toISOString() : null,
       expirationTimestamp: this.expirationTimestamp,
-      createdAtDate: this.props.createdAtDate,
+      createdAtDate: this.props.createdAtDate.toISOString(),
       createdAtTimestamp: this.createdAtTimestamp,
       filledAtDate: this.props.filledAtDate,
     };

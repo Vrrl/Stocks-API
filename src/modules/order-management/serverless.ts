@@ -7,7 +7,7 @@ import * as environment from '@src/modules/order-management/infra/serverless/pro
 const serverlessConfiguration: AWS = {
   service: 'OrderManagementAPI',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild', 'serverless-offline'],
+  plugins: ['serverless-esbuild', 'serverless-offline', 'serverless-offline-sqs'],
   provider: {
     name: 'aws',
     runtime: 'nodejs20.x',
@@ -48,6 +48,15 @@ const serverlessConfiguration: AWS = {
       websocketPort: 28011,
       lambdaPort: 28012,
       albPort: 28013,
+    },
+    'serverless-offline-sqs': {
+      autoCreate: true,
+      apiVersion: '2012-11-05',
+      endpoint: 'http://0.0.0.0:9324',
+      region: 'us-east-1',
+      accessKeyId: 'root',
+      secretAccessKey: 'root',
+      skipCacheInvalidation: false,
     },
   },
 };

@@ -37,7 +37,7 @@ export class OrderEditUseCase implements IUseCase<OrderEditRequest, OrderEditRes
     expirationType,
     expirationDate,
   }: OrderEditRequest): Promise<OrderEditResponse> {
-    const targetOrder = await this.orderQueryRepository.getById(shareholderId, orderId);
+    const targetOrder = await this.orderQueryRepository.getByShareholderId(shareholderId, orderId);
 
     if (!targetOrder) {
       throw new CoreErrors.ValidationError(OrderEditUseCase.ClassErrors.UseCaseError.TargetOrder.ORDER_NOT_FOUND, 404);

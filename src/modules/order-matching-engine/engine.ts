@@ -37,7 +37,7 @@ export class Engine {
     const canceledOrder = this.orderBook.removeOrder(order);
 
     const postProcessingMessage = canceledOrder
-      ? new OrderCanceledMessage(canceledOrder)
+      ? new OrderCanceledMessage({ orderId: canceledOrder.id })
       : new OrderMutationFailedMessage({ id: order.id, reason: OrderMutationFailedMessage.FailErrors.ORDER_NOT_FOUND });
 
     this.eventNotifier.notifyBatch([postProcessingMessage]);

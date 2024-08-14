@@ -18,13 +18,13 @@ export class OrderQueryRepository implements IOrderQueryRepository {
     );
   }
 
-  async listByShareholderId(id: string): Promise<Order[]> {
+  async listByShareholderId(shareholderId: string): Promise<Order[]> {
     const queryCommand = new QueryCommand({
       TableName: this.DYNAMO_ORDERS_TABLE,
       KeyConditionExpression: 'shareholderId = :shareholderId',
       ExpressionAttributeValues: marshall(
         {
-          ':shareholderId': id,
+          ':shareholderId': shareholderId,
         },
         { removeUndefinedValues: true },
       ),
@@ -37,7 +37,7 @@ export class OrderQueryRepository implements IOrderQueryRepository {
     return result.Items.map(x => OrderMap.toDomain(unmarshall(x)));
   }
 
-  async getById(shareholderId: string, id: string): Promise<Order | undefined> {
+  async getByShareholderId(shareholderId: string, id: string): Promise<Order | undefined> {
     const queryCommand = new GetItemCommand({
       TableName: this.DYNAMO_ORDERS_TABLE,
       Key: marshall({
@@ -51,5 +51,23 @@ export class OrderQueryRepository implements IOrderQueryRepository {
     if (!result.Item) return undefined;
 
     return OrderMap.toDomain(unmarshall(result.Item));
+  }
+
+  async getById(id: string): Promise<Order | undefined> {
+    const queryCommand = new QueryCommand({
+      TableName: this.DYNAMO_ORDERS_TABLE,
+      IndexName: 'id-index',
+      KeyConditionExpression: 'id = :id',
+      ExpressionAttributeValues: marshall({
+        ':id': id,
+      }),
+      Limit: 1,
+    });
+
+    const result = await this.dynamoClient.send(queryCommand);
+
+    if (!result.Items || !result.Items.length) return undefined;
+
+    return OrderMap.toDomain(unmarshall(result.Items[0]));
   }
 }

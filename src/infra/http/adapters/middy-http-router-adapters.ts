@@ -1,12 +1,12 @@
 import { APIGatewayProxyEventV2, APIGatewayProxyStructuredResultV2 } from 'aws-lambda';
 import { HttpRequest } from '@core/infra/http';
-import { Router } from '@core/infra/router';
+import { HttpRouter } from '@src/core/infra/http-router';
 import middy from '@middy/core';
 import httpRouterHandler, { Route } from '@middy/http-router';
 import httpHeaderNormalizer from '@middy/http-header-normalizer';
 import httpJsonBodyParser from '@middy/http-json-body-parser';
 
-export const middyRouterAdapter = (router: Router) => {
+export const middyHttpRouterAdapter = (router: HttpRouter) => {
   /*
    * @Adapter: Adapt an @class Router object to Middy Object
    */

@@ -9,10 +9,10 @@ import { User } from '@src/infra/authentication/domain/user';
 import container from '@src/modules/account-management/infra/injector';
 import { UseCaseError, ValidationError } from '../errors';
 
-export type ControllerContext = { user?: User };
+export type HttpControllerContext = { user?: User };
 
 @injectable()
-export abstract class Controller {
+export abstract class HttpController {
   protected authenticationService: IAuthenticationService;
 
   authenticationLevels?: AuthenticationLevel[];
@@ -28,11 +28,11 @@ export abstract class Controller {
   }
 
   abstract get requestSchema(): z.AnyZodObject | undefined;
-  abstract perform(httpRequest: HttpRequest, context?: ControllerContext): Promise<HttpResponse>;
+  abstract perform(httpRequest: HttpRequest, context?: HttpControllerContext): Promise<HttpResponse>;
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const context: ControllerContext = {};
+      const context: HttpControllerContext = {};
 
       if (this.authenticationLevels?.length) {
         try {

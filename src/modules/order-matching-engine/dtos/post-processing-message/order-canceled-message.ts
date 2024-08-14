@@ -5,7 +5,7 @@ export class OrderCanceledMessage implements PostProcessingMessage {
   type = MatchingEngineEventType.OrderCanceled;
   constructor(
     public payload: {
-      id: string;
+      orderId: string;
     },
   ) {}
 }

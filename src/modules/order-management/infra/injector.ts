@@ -21,6 +21,7 @@ import { IOrderQueryRepository } from './db/order-query-repository';
 import { OrderQueryRepository } from './db/dynamo/order-query-repository';
 import { OrderCancelationUseCase } from '../use-cases/order-cancelation/order-cancelation';
 import { OrderEditUseCase } from '../use-cases/order-edit/order-edit';
+import { PostProcessingOrderCancelationUseCase } from '../use-cases/order-cancelation/post-processing/post-processing-order-cancelation';
 
 loadEnvFromDictionary(providerEnv);
 
@@ -50,6 +51,9 @@ container.bind<IEventNotifier>(TYPES.IEventNotifier).to(EventNotifier);
 // UseCases
 container.bind<OrderEditUseCase>(TYPES.OrderEditUseCase).to(OrderEditUseCase);
 container.bind<OrderCancelationUseCase>(TYPES.OrderCancelationUseCase).to(OrderCancelationUseCase);
+container
+  .bind<PostProcessingOrderCancelationUseCase>(TYPES.PostProcessingOrderCancelationUseCase)
+  .to(PostProcessingOrderCancelationUseCase);
 container.bind<OrderRegistrationUseCase>(TYPES.OrderRegistrationUseCase).to(OrderRegistrationUseCase);
 container.bind<OrderListUseCase>(TYPES.OrderListUseCase).to(OrderListUseCase);
 

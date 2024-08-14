@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { accepted } from '@src/core/infra/helpers/http-status';
 import { HttpRequest, HttpResponse } from '@core/infra/http';
-import { Controller, ControllerContext } from '@core/infra/controller';
+import { HttpController, HttpControllerContext } from '@src/core/infra/http-controller';
 import TYPES from '@src/core/types';
 import { AuthenticationLevel } from '@src/core/infra/authentication/authentication-level';
 import { OrderEditUseCase } from './order-edit';
@@ -10,7 +10,7 @@ import { User } from '@src/infra/authentication/domain/user';
 import { OrderExpirationTypeSchema } from '../../domain/order-expiration-type-enum';
 
 @injectable()
-export class OrderEditController extends Controller {
+export class OrderEditController extends HttpController {
   constructor(
     @inject(TYPES.OrderEditUseCase)
     private readonly orderEditUseCase: OrderEditUseCase,
@@ -34,7 +34,7 @@ export class OrderEditController extends Controller {
     });
   }
 
-  async perform(httpRequest: HttpRequest, context: ControllerContext): Promise<HttpResponse> {
+  async perform(httpRequest: HttpRequest, context: HttpControllerContext): Promise<HttpResponse> {
     const { orderId } = httpRequest.pathParams;
     const { unitValue, shares, expirationType, expirationDate } = httpRequest.body;
 
