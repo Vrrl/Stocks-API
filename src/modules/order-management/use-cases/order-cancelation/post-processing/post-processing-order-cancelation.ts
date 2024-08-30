@@ -4,10 +4,9 @@ import { IUseCase } from '@src/core/use-case';
 import { CoreErrors } from '@src/core/errors';
 import { IOrderQueryRepository } from '@src/modules/order-management/infra/db/order-query-repository';
 import { IOrderCommandRepository } from '@src/modules/order-management/infra/db/order-command-repository';
+import { PostProcessingOrderCancelationMessage } from './post-processing-order-cancelation-message';
 
-interface PostProcessingOrderCancelationRequest {
-  orderId: string;
-}
+interface PostProcessingOrderCancelationRequest extends PostProcessingOrderCancelationMessage {}
 
 type PostProcessingOrderCancelationResponse = void;
 
@@ -31,7 +30,7 @@ export class PostProcessingOrderCancelationUseCase
       );
     }
 
-    targetOrder.cancel();
+    targetOrder.confirmPendingCancelation();
 
     await this.orderCommandRepository.save(targetOrder);
   }

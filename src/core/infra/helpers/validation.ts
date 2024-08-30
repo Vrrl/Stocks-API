@@ -5,7 +5,7 @@ export const throwIfUndefinedOrEmptyString = (target: any, errorMessage?: string
   return target;
 };
 
-export const throwIfUndefined = (target: any, errorMessage?: string): string => {
+export const throwIfUndefined = <T = any>(target: T, errorMessage?: string): T => {
   if (target === undefined) {
     throw new Error(errorMessage || `Expected to target variable to not be undefined.`);
   }

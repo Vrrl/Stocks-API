@@ -6,6 +6,7 @@ import { IEventNotifier } from '../../infra/event/event-notifier';
 import { EventNames } from '../../domain/event-names';
 import { IOrderQueryRepository } from '../../infra/db/order-query-repository';
 import { CoreErrors } from '@src/core/errors';
+import { IOrderCommandRepository } from '../../infra/db/order-command-repository';
 
 interface OrderCancelationRequest {
   shareholderId: string;
@@ -19,6 +20,8 @@ export class OrderCancelationUseCase implements IUseCase<OrderCancelationRequest
   constructor(
     @inject(TYPES.IOrderQueryRepository)
     private readonly orderQueryRepository: IOrderQueryRepository,
+    @inject(TYPES.IOrderCommandRepository)
+    private readonly orderCommandRepository: IOrderCommandRepository,
     @inject(TYPES.IEventNotifier)
     private readonly eventNotifier: IEventNotifier,
   ) {}
@@ -47,7 +50,10 @@ export class OrderCancelationUseCase implements IUseCase<OrderCancelationRequest
       );
     }
 
+    targetOrder.markAsPendingCancelation();
+
     await this.eventNotifier.notifyWithBody(EventNames.OrderCanceled, targetOrder.toJson());
+    await this.orderCommandRepository.save(targetOrder);
   }
 
   static ClassErrors = {

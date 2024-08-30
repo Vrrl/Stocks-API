@@ -58,7 +58,15 @@ export class Engine {
 
     const executionResult = this.orderBook.executeOrder(order);
 
-    const postProcessingMessages = [new OrderEditedMessage({ order })];
+    const postProcessingMessages = [
+      new OrderEditedMessage({
+        orderId: order.id,
+        shares: order.shares,
+        expirationTimestamp: order.expirationTimestamp,
+        expirationType: order.expirationType,
+        unitValue: order.unitValue,
+      }),
+    ];
 
     postProcessingMessages.push(...PostProcessingMapper.mapExecutionResultToMessages(executionResult));
 

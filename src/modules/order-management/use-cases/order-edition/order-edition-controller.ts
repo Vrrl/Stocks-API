@@ -4,16 +4,16 @@ import { HttpRequest, HttpResponse } from '@core/infra/http';
 import { HttpController, HttpControllerContext } from '@src/core/infra/http-controller';
 import TYPES from '@src/core/types';
 import { AuthenticationLevel } from '@src/core/infra/authentication/authentication-level';
-import { OrderEditUseCase } from './order-edit';
+import { OrderEditionUseCase } from './order-edition';
 import { inject, injectable } from 'inversify/lib/inversify';
 import { User } from '@src/infra/authentication/domain/user';
 import { OrderExpirationTypeSchema } from '../../domain/order-expiration-type-enum';
 
 @injectable()
-export class OrderEditController extends HttpController {
+export class OrderEditionController extends HttpController {
   constructor(
-    @inject(TYPES.OrderEditUseCase)
-    private readonly orderEditUseCase: OrderEditUseCase,
+    @inject(TYPES.OrderEditionUseCase)
+    private readonly orderEditionUseCase: OrderEditionUseCase,
   ) {
     super();
   }
@@ -40,7 +40,7 @@ export class OrderEditController extends HttpController {
 
     const user = context.user as User;
 
-    await this.orderEditUseCase.execute({
+    await this.orderEditionUseCase.execute({
       shareholderId: user.id,
       orderId,
       unitValue,

@@ -1,6 +1,5 @@
 import {
   throwIfNotNumber,
-  throwIfUndefined,
   throwIfUndefinedOrEmptyString,
   throwIfUndefinedOrNotEnum,
 } from '@src/core/infra/helpers/validation';

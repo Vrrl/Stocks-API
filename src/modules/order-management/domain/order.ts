@@ -17,6 +17,8 @@ interface OrderProps {
   expirationDate: Date | null;
   createdAtDate: Date;
   filledAtDate: Date | null;
+  hasPendingEdition: boolean;
+  hasPendingCancelation: boolean;
 }
 
 export class Order extends AggregateRoot<OrderProps> {
@@ -51,7 +53,10 @@ export class Order extends AggregateRoot<OrderProps> {
     },
     UseCaseError: {
       Cancelation: {
-        INVALID_PREVIOUS_STATUS_CANCELATION: 'Order has a invalid status for cancelation',
+        INVALID_PENDING_STATE: 'Order has an invalid pending state for cancelation confirmation',
+      },
+      Edition: {
+        INVALID_PENDING_STATE: 'Order has an invalid pending state for edition confirmation',
       },
     },
   };
@@ -140,22 +145,47 @@ export class Order extends AggregateRoot<OrderProps> {
         expirationDate: !props.expirationDate ? null : new Date(props.expirationDate),
         createdAtDate: new Date(props.createdAtDate),
         filledAtDate: !props.filledAtDate ? null : new Date(props.filledAtDate),
+        hasPendingEdition: false,
+        hasPendingCancelation: false,
       },
       id,
     );
   }
 
-  cancel() {
-    if (![OrderStatusEnum.PartiallyFilled, OrderStatusEnum.Pending].includes(this.props.status)) {
-      throw new CoreErrors.UseCaseError(Order.ClassErrors.UseCaseError.Cancelation.INVALID_PREVIOUS_STATUS_CANCELATION);
+  markAsPendingCancelation() {
+    this.props.hasPendingCancelation = true;
+
+    return this;
+  }
+
+  confirmPendingCancelation() {
+    if (!this.props.hasPendingCancelation) {
+      throw new CoreErrors.UseCaseError(Order.ClassErrors.UseCaseError.Cancelation.INVALID_PENDING_STATE);
     }
 
+    this.props.hasPendingCancelation = false;
     this.props.status = OrderStatusEnum.Canceled;
 
     return this;
   }
 
-  setExpirationDate(expirationDate: Date | null) {
+  markAsPendingEdition() {
+    this.props.hasPendingEdition = true;
+
+    return this;
+  }
+
+  confirmPendingEdition() {
+    if (!this.props.hasPendingEdition) {
+      throw new CoreErrors.UseCaseError(Order.ClassErrors.UseCaseError.Edition.INVALID_PENDING_STATE);
+    }
+
+    this.props.hasPendingEdition = false;
+
+    return this;
+  }
+
+  updateExpirationDate(expirationDate: Date | null) {
     this.props.expirationDate = expirationDate;
     this.validateSelfExpirationCoherence();
     this.validateSelfDatesCorrelation();
@@ -190,6 +220,15 @@ export class Order extends AggregateRoot<OrderProps> {
     return this;
   }
 
+  copy(): Order {
+    return new Order(
+      {
+        ...this.props,
+      },
+      this.id,
+    );
+  }
+
   public toJson() {
     return {
       id: this.id,
@@ -204,6 +243,7 @@ export class Order extends AggregateRoot<OrderProps> {
       createdAtDate: this.props.createdAtDate.toISOString(),
       createdAtTimestamp: this.createdAtTimestamp,
       filledAtDate: this.props.filledAtDate,
+      hasPendingEdition: this.props.hasPendingEdition,
     };
   }
 }
