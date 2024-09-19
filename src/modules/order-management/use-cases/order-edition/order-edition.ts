@@ -56,6 +56,13 @@ export class OrderEditionUseCase implements IUseCase<OrderEditionRequest, OrderE
       );
     }
 
+    if (targetOrder.props.hasPendingEdition) {
+      throw new CoreErrors.ValidationError(
+        OrderEditionUseCase.ClassErrors.UseCaseError.TargetOrder.ORDER_WITH_PENDING_EDITION_STATE,
+        403,
+      );
+    }
+
     if (![OrderStatusEnum.Pending, OrderStatusEnum.PartiallyFilled].includes(targetOrder.props.status)) {
       throw new CoreErrors.UseCaseError(
         OrderEditionUseCase.ClassErrors.UseCaseError.TargetOrder.ORDER_STATUS_NOT_ELEGIBLE,
@@ -95,8 +102,9 @@ export class OrderEditionUseCase implements IUseCase<OrderEditionRequest, OrderE
       TargetOrder: {
         ORDER_NOT_FOUND: 'The specified order was not found.',
         ORDER_WITH_DIFFERENT_SHAREHOLDER: 'The specified order has a different shareholder.',
+        ORDER_WITH_PENDING_EDITION_STATE: 'The specified order has a pending edition state.',
         ORDER_STATUS_NOT_ELEGIBLE:
-          'The specified order has an not elegible status for editing. Elegible status: OrderStatusEnum.Pending, OrderStatusEnum.PartiallyFilled',
+          'The specified order has an not elegible status for editing. Elegible status: OrderStatusEnum.Pending, OrderStatusEnum.PartiallyFilled.',
       },
     },
   };

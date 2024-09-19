@@ -11,16 +11,21 @@ import {
   PublishBatchCommand,
 } from '@aws-sdk/client-sns';
 import { PostProcessingMessage } from '../post-processing-message';
+import { throwIfUndefinedOrEmptyString } from '@src/core/infra/helpers/validation';
 
 @injectable()
 export class EventNotifier implements IEventNotifier {
-  constructor(@inject(TYPES.SNSClient) private snsClient: SNSClient) {}
+  SNS_ORDER_POSTPROCESS_TOPIC: string;
+
+  constructor(@inject(TYPES.SNSClient) private snsClient: SNSClient) {
+    this.SNS_ORDER_POSTPROCESS_TOPIC = throwIfUndefinedOrEmptyString(process.env.SNS_ORDER_POSTPROCESS_TOPIC);
+  }
 
   async notifyOrderTopic({ payload, type }: PostProcessingMessage): Promise<void> {
     const params: PublishCommandInput = {
       Subject: type,
       Message: JSON.stringify(payload),
-      TopicArn: process.env.SNS_ORDER_POSTPROCESS_TOPIC,
+      TopicArn: this.SNS_ORDER_POSTPROCESS_TOPIC,
     };
 
     const command = new PublishCommand(params);
@@ -36,7 +41,7 @@ export class EventNotifier implements IEventNotifier {
 
     const params: PublishBatchCommandInput = {
       PublishBatchRequestEntries: preparedMessages,
-      TopicArn: process.env.SNS_ORDER_POSTPROCESS_TOPIC,
+      TopicArn: this.SNS_ORDER_POSTPROCESS_TOPIC,
     };
 
     const command = new PublishBatchCommand(params);

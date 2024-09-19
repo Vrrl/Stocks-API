@@ -131,6 +131,8 @@ export class Order extends AggregateRoot<OrderProps> {
       expirationDate?: string | null;
       createdAtDate: string;
       filledAtDate?: string | null;
+      hasPendingEdition?: boolean;
+      hasPendingCancelation?: boolean;
     },
     id?: string,
   ) {
@@ -145,8 +147,8 @@ export class Order extends AggregateRoot<OrderProps> {
         expirationDate: !props.expirationDate ? null : new Date(props.expirationDate),
         createdAtDate: new Date(props.createdAtDate),
         filledAtDate: !props.filledAtDate ? null : new Date(props.filledAtDate),
-        hasPendingEdition: false,
-        hasPendingCancelation: false,
+        hasPendingEdition: props.hasPendingEdition ?? false,
+        hasPendingCancelation: props.hasPendingCancelation ?? false,
       },
       id,
     );
@@ -244,6 +246,7 @@ export class Order extends AggregateRoot<OrderProps> {
       createdAtTimestamp: this.createdAtTimestamp,
       filledAtDate: this.props.filledAtDate,
       hasPendingEdition: this.props.hasPendingEdition,
+      hasPendingCancelation: this.props.hasPendingCancelation,
     };
   }
 }

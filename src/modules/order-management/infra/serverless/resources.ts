@@ -38,19 +38,39 @@ const resources: AWS['resources'] = {
         QueueName: 'PostProcessingOrderCancelationQueue',
       },
     },
-    MatchingEngineTopicSubscription: {
-      Type: 'AWS::SNS::Subscription',
-      Properties: {
-        TopicArn: environment.SNS_ORDER_POSTPROCESS_TOPIC,
-        Protocol: 'sqs',
-        Endpoint: {
-          'Fn::GetAtt': ['PostProcessingOrderCancelationQueue', 'Arn'],
-        },
-        FilterPolicy: {
-          Subject: ['ORDER_CANCELED'],
-        },
-      },
-    },
+    // MatchingEngineTopicSubscription: {
+    //   Type: 'AWS::SNS::Subscription',
+    //   Properties: {
+    //     TopicArn: environment.SNS_ORDER_POSTPROCESS_TOPIC,
+    //     Protocol: 'sqs',
+    //     Endpoint: { Ref: 'PostProcessingOrderCancelationQueue' },
+    //     FilterPolicy: {
+    //       Subject: ['ORDER_CANCELED'],
+    //     },
+    //   },
+    // },
+    // PostProcessingOrderCancelationQueuePolicy: {
+    //   Type: 'AWS::SQS::QueuePolicy',
+    //   Properties: {
+    //     Queues: [{ Ref: 'PostProcessingOrderCancelationQueue' }],
+    //     PolicyDocument: {
+    //       Version: '2012-10-17',
+    //       Statement: [
+    //         {
+    //           Effect: 'Allow',
+    //           Principal: '*',
+    //           Action: 'SQS:SendMessage',
+    //           Resource: { Ref: 'PostProcessingOrderCancelationQueue' },
+    //           Condition: {
+    //             ArnEquals: {
+    //               'aws:SourceArn': environment.SNS_ORDER_POSTPROCESS_TOPIC,
+    //             },
+    //           },
+    //         },
+    //       ],
+    //     },
+    //   },
+    // },
   },
 };
 

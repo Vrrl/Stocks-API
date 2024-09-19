@@ -43,6 +43,13 @@ export class OrderCancelationUseCase implements IUseCase<OrderCancelationRequest
       );
     }
 
+    if (targetOrder.props.hasPendingCancelation) {
+      throw new CoreErrors.ValidationError(
+        OrderCancelationUseCase.ClassErrors.UseCaseError.TargetOrder.ORDER_WITH_PENDING_CANCELATION_STATE,
+        409,
+      );
+    }
+
     if (![OrderStatusEnum.Pending, OrderStatusEnum.PartiallyFilled].includes(targetOrder.props.status)) {
       throw new CoreErrors.UseCaseError(
         OrderCancelationUseCase.ClassErrors.UseCaseError.TargetOrder.ORDER_STATUS_NOT_ELEGIBLE,
@@ -61,8 +68,9 @@ export class OrderCancelationUseCase implements IUseCase<OrderCancelationRequest
       TargetOrder: {
         ORDER_NOT_FOUND: 'The specified order was not found.',
         ORDER_WITH_DIFFERENT_SHAREHOLDER: 'The specified order has a different shareholder.',
+        ORDER_WITH_PENDING_CANCELATION_STATE: 'The specified order has a pending cancelation state.',
         ORDER_STATUS_NOT_ELEGIBLE:
-          'The specified order has an not elegible status for cancelation or it is already canceled. Elegible status: OrderStatusEnum.Pending, OrderStatusEnum.PartiallyFilled',
+          'The specified order has an not elegible status for cancelation or it is already canceled. Elegible status: OrderStatusEnum.Pending, OrderStatusEnum.PartiallyFilled.',
       },
     },
   };
