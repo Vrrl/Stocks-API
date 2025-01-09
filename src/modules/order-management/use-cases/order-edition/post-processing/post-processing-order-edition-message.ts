@@ -17,17 +17,17 @@ export class PostProcessingOrderEditionMessage extends IQueueMessage {
   static fromSQSRecord(record: SQSRecord): InstanceType<typeof PostProcessingOrderEditionMessage> {
     const body = record.body ? JSON.parse(record.body) : {};
 
-    const orderId = throwIfUndefinedOrEmptyString(body.orderId, 'Attribute orderId is required in message body');
-    const unitValue = throwIfUndefined(body.unitValue, 'Attribute unitValue is required in message body');
-    const shares = throwIfUndefined(body.shares, 'Attribute shares is required in message body');
+    const orderId = throwIfUndefinedOrEmptyString(body.orderId, 'Attribute orderId is required in message');
+    const unitValue = throwIfUndefined(body.unitValue, 'Attribute unitValue is required in message');
+    const shares = throwIfUndefined(body.shares, 'Attribute shares is required in message');
     const expirationType = throwIfUndefinedOrNotEnum(
       body.expirationType,
       OrderExpirationTypeEnum,
-      'Attribute expirationType is required in message body',
+      'Attribute expirationType is required in message',
     );
     const expirationTimestamp = throwIfUndefined(
       body.expirationTimestamp,
-      'Attribute expirationTimestamp is required in message body',
+      'Attribute expirationTimestamp is required in message',
     );
 
     return { orderId, unitValue, shares, expirationType, expirationTimestamp };

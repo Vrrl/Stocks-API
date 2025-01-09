@@ -14,7 +14,10 @@ const IAM: AWS['provider']['iam'] = {
           'dynamodb:DeleteItem',
           'dynamodb:BatchGetItem',
         ],
-        Resource: 'arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMO_ORDERS_TABLE}',
+        Resource: [
+          'arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMO_ORDERS_TABLE}',
+          // 'arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMO_ORDERS_TABLE}/index/id-index',
+        ],
       },
       {
         Effect: 'Allow',

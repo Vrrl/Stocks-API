@@ -37,6 +37,12 @@ export class EventNotifier implements IEventNotifier {
       Id: uuid(),
       Subject: x.type,
       Message: JSON.stringify(x.payload),
+      MessageAttributes: {
+        Type: {
+          DataType: 'String',
+          StringValue: x.type,
+        },
+      },
     }));
 
     const params: PublishBatchCommandInput = {
