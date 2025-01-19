@@ -2,7 +2,7 @@ import { MatchingEngineEventType } from '../../domain/events/matching-engine-eve
 import { PostProcessingMessage } from '../../infra/event/post-processing-message';
 
 export class OrderCanceledMessage implements PostProcessingMessage {
-  type = MatchingEngineEventType.OrderCanceled;
+  eventType = MatchingEngineEventType.OrderCanceled;
   constructor(
     public payload: {
       orderId: string;

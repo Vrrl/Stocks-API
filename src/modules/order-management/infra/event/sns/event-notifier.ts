@@ -11,8 +11,14 @@ export class EventNotifier implements IEventNotifier {
   async notifyWithBody(eventName: EventNames, body: object): Promise<void> {
     const params: PublishCommandInput = {
       Subject: eventName,
-      Message: JSON.stringify(body),
-      TopicArn: process.env.SNS_ORDER_PROCESS_TOPIC,
+      Message: JSON.stringify({ ...body, eventType: eventName }),
+      TopicArn: process.env.SNS_ORDER_PROCESS_TOPIC_ARN,
+      MessageAttributes: {
+        eventType: {
+          DataType: 'String',
+          StringValue: eventName,
+        },
+      },
     };
 
     const command = new PublishCommand(params);

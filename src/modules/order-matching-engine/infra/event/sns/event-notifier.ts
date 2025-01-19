@@ -11,21 +11,26 @@ import {
   PublishBatchCommand,
 } from '@aws-sdk/client-sns';
 import { PostProcessingMessage } from '../post-processing-message';
-import { throwIfUndefinedOrEmptyString } from '@src/core/infra/helpers/validation';
 
 @injectable()
 export class EventNotifier implements IEventNotifier {
   SNS_ORDER_POSTPROCESS_TOPIC: string;
 
   constructor(@inject(TYPES.SNSClient) private snsClient: SNSClient) {
-    this.SNS_ORDER_POSTPROCESS_TOPIC = throwIfUndefinedOrEmptyString(process.env.SNS_ORDER_POSTPROCESS_TOPIC);
+    this.SNS_ORDER_POSTPROCESS_TOPIC = 'arn:aws:sns:us-east-1:565393064122:MatchingEngineTopic'; // TODO: add env var
   }
 
-  async notifyOrderTopic({ payload, type }: PostProcessingMessage): Promise<void> {
+  async notifyOrderTopic({ payload, eventType }: PostProcessingMessage): Promise<void> {
     const params: PublishCommandInput = {
-      Subject: type,
+      Subject: eventType,
       Message: JSON.stringify(payload),
       TopicArn: this.SNS_ORDER_POSTPROCESS_TOPIC,
+      MessageAttributes: {
+        eventType: {
+          DataType: 'String',
+          StringValue: eventType,
+        },
+      },
     };
 
     const command = new PublishCommand(params);
@@ -35,12 +40,12 @@ export class EventNotifier implements IEventNotifier {
   async notifyBatch(eventMessages: PostProcessingMessage[]): Promise<void> {
     const preparedMessages: PublishBatchRequestEntry[] = eventMessages.map(x => ({
       Id: uuid(),
-      Subject: x.type,
+      Subject: x.eventType,
       Message: JSON.stringify(x.payload),
       MessageAttributes: {
-        Type: {
+        eventType: {
           DataType: 'String',
-          StringValue: x.type,
+          StringValue: x.eventType,
         },
       },
     }));

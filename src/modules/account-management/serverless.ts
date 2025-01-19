@@ -1,8 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 import functions from '@src/modules/account-management/infra/serverless/functions';
 import iam from '@src/modules/account-management/infra/serverless/iam';
-import resources from '@src/modules/account-management/infra/serverless/resources';
-import * as environment from '@src/modules/account-management/infra/serverless/provider-environment';
+import * as environment from '@src/modules/account-management/infra/serverless/environment';
 
 const serverlessConfiguration: AWS = {
   service: 'AccountManagementAPI',
@@ -25,7 +24,6 @@ const serverlessConfiguration: AWS = {
     iam,
   },
   functions,
-  resources,
   package: { individually: true },
   custom: {
     yarn: {

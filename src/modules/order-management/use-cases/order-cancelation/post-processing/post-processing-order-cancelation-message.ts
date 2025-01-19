@@ -6,9 +6,8 @@ export class PostProcessingOrderCancelationMessage extends IQueueMessage {
   orderId: string;
 
   static fromSQSRecord(record: SQSRecord): InstanceType<typeof PostProcessingOrderCancelationMessage> {
-    const body = record.body ? JSON.parse(record.body) : {};
-    const message = body.Message ? JSON.parse(body.Message) : {};
-    const orderId = throwIfUndefinedOrEmptyString(message.orderId, 'Attribute orderId is required in message body');
+    const parsedBody = JSON.parse(record.body ?? '{}');
+    const orderId = throwIfUndefinedOrEmptyString(parsedBody.orderId, 'Attribute orderId is required in message body');
     return { orderId };
   }
 }

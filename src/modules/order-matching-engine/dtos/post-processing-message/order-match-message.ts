@@ -5,7 +5,7 @@ import { OrderTypeEnum } from '../../domain/order-type-enum';
 import { PostProcessingMessage } from '../../infra/event/post-processing-message';
 
 export class OrderMatchMessage implements PostProcessingMessage {
-  type = MatchingEngineEventType.OrderMatch;
+  eventType = MatchingEngineEventType.OrderMatch;
   constructor(
     public payload: {
       id: string;

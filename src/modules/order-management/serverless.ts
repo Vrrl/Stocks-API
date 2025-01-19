@@ -1,11 +1,10 @@
 import type { AWS } from '@serverless/typescript';
 import functions from '@src/modules/order-management/infra/serverless/functions';
 import iam from '@src/modules/order-management/infra/serverless/iam';
-import resources from '@src/modules/order-management/infra/serverless/resources';
-import * as environment from '@src/modules/order-management/infra/serverless/provider-environment';
+import * as environment from '@src/modules/order-management/infra/serverless/environment';
 
 const serverlessConfiguration: AWS = {
-  service: 'OrderManagementAPI',
+  service: 'OM',
   frameworkVersion: '3',
   plugins: ['serverless-esbuild', 'serverless-offline', 'serverless-offline-sqs'],
   provider: {
@@ -25,7 +24,6 @@ const serverlessConfiguration: AWS = {
     iam,
   },
   functions,
-  resources,
   package: { individually: true },
   custom: {
     yarn: {

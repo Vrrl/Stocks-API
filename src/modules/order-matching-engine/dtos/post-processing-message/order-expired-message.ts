@@ -5,7 +5,7 @@ import { OrderTypeEnum } from '../../domain/order-type-enum';
 import { PostProcessingMessage } from '../../infra/event/post-processing-message';
 
 export class OrderExpiredMessage implements PostProcessingMessage {
-  type = MatchingEngineEventType.OrderExpired;
+  eventType = MatchingEngineEventType.OrderExpired;
   constructor(
     public payload: {
       id: string;

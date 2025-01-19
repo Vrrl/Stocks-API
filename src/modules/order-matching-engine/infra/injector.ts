@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import * as providerEnv from '@modules/order-management/infra/serverless/provider-environment';
+import * as providerEnv from '@modules/order-management/infra/serverless/environment';
 import { Container } from 'inversify/lib/inversify';
 import { loadEnvFromDictionary } from '@src/core/utils/loadEnvFromDictionary';
 import { SQSClient } from '@aws-sdk/client-sqs';

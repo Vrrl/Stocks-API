@@ -3,7 +3,7 @@ import { OrderExpirationTypeEnum } from '../../domain/order-expiration-type-enum
 import { PostProcessingMessage } from '../../infra/event/post-processing-message';
 
 export class OrderEditedMessage implements PostProcessingMessage {
-  type = MatchingEngineEventType.OrderEdited;
+  eventType = MatchingEngineEventType.OrderEdited;
   constructor(
     public payload: {
       orderId: string;

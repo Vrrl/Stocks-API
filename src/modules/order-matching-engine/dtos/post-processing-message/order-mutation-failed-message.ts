@@ -2,7 +2,7 @@ import { MatchingEngineEventType } from '../../domain/events/matching-engine-eve
 import { PostProcessingMessage } from '../../infra/event/post-processing-message';
 
 export class OrderMutationFailedMessage implements PostProcessingMessage {
-  type = MatchingEngineEventType.OrderMutationFailed;
+  eventType = MatchingEngineEventType.OrderMutationFailed;
   constructor(public payload: { id: string; reason: FailErrorsType }) {}
 
   static FailErrors = {

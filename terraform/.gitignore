@@ -1,0 +1,17 @@
+# Arquivos e diretórios gerados pelo Terraform
+*.tfstate
+*.tfstate.*
+*.log
+
+# Arquivos de backup do Terraform
+*.backup
+
+# Diretório de configurações do Terraform
+.terraform/
+
+# Arquivos de configuração do Terraform que podem conter informações sensíveis
+*.tfvars
+*.tfvars.json
+
+# Caso utilize o Terraform Cloud ou Enterprise
+.terraform.lock.hcl

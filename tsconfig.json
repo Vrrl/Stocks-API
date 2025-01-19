@@ -24,7 +24,7 @@
     "allowSyntheticDefaultImports": true,
     "composite": true
   },
-  "include": ["src/**/*.ts", "src/modules/order-management/serverless.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["./dist", "node_modules/**/*", ".serverless/**/*", ".webpack/**/*", "_warmup/**/*", ".vscode/**/*"],
   "ts-node": {
     "require": ["tsconfig-paths/register"]

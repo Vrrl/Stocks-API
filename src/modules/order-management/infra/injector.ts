@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import TYPES from '@src/core/types';
-import * as providerEnv from '@modules/order-management/infra/serverless/provider-environment';
+import * as providerEnv from '@modules/order-management/infra/serverless/environment';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { S3Client } from '@aws-sdk/client-s3';
 import { CognitoIdentityProvider } from '@aws-sdk/client-cognito-identity-provider';
@@ -22,6 +22,7 @@ import { OrderQueryRepository } from './db/dynamo/order-query-repository';
 import { OrderCancelationUseCase } from '../use-cases/order-cancelation/order-cancelation';
 import { PostProcessingOrderCancelationUseCase } from '../use-cases/order-cancelation/post-processing/post-processing-order-cancelation';
 import { OrderEditionUseCase } from '../use-cases/order-edition/order-edition';
+import { PostProcessingOrderEditionUseCase } from '../use-cases/order-edition/post-processing/post-processing-order-edition';
 
 loadEnvFromDictionary(providerEnv);
 
@@ -54,6 +55,9 @@ container.bind<OrderCancelationUseCase>(TYPES.OrderCancelationUseCase).to(OrderC
 container
   .bind<PostProcessingOrderCancelationUseCase>(TYPES.PostProcessingOrderCancelationUseCase)
   .to(PostProcessingOrderCancelationUseCase);
+container
+  .bind<PostProcessingOrderEditionUseCase>(TYPES.PostProcessingOrderEditionUseCase)
+  .to(PostProcessingOrderEditionUseCase);
 container.bind<OrderRegistrationUseCase>(TYPES.OrderRegistrationUseCase).to(OrderRegistrationUseCase);
 container.bind<OrderListUseCase>(TYPES.OrderListUseCase).to(OrderListUseCase);
 

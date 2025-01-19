@@ -1,11 +1,11 @@
-import { AwsArn } from '@serverless/typescript';
+import { AWS } from '@serverless/typescript';
 import { IQueueMessage } from './queue';
 import { QueueController } from './queue-controller';
 import { IRouter } from './router';
 import { getServerlessModuleHandlerPath } from '../utils/get-serverless-module-handle-path';
 
 type route = {
-  queue: AwsArn;
+  queue: string;
   controller: QueueController<IQueueMessage>;
   batchSize?: number;
   maximumConcurrency?: number;
@@ -18,26 +18,25 @@ export class QueueRouter implements IRouter {
 
   rawRoutes: route[];
 
-  public toServerlessFunctions(dirName: string) {
+  public toServerlessFunctions(dirName: string): AWS['functions'] {
     return Object.fromEntries(
-      this.routes.map(({ queue, batchSize, controller, maximumConcurrency }) => [
-        `${controller.constructor.name}`,
-        {
-          handler: `${getServerlessModuleHandlerPath(dirName)}/functions.queue`,
-          events: [
-            {
-              sqs: {
-                // arn: {
-                //   'Fn::GetAtt': [queue, 'Arn'],
-                // },
-                arn: 'arn:aws:sqs:region:XXXXXX:' + queue,
-                batchSize,
-                maximumConcurrency,
+      this.routes.map(({ queue, batchSize, controller, maximumConcurrency }) => {
+        return [
+          `${controller.constructor.name}`,
+          {
+            handler: `${getServerlessModuleHandlerPath(dirName)}/functions.queue`,
+            events: [
+              {
+                sqs: {
+                  arn: `arn:aws:sqs:${process.env.REGION}:${process.env.ACCOUNT_ID}:${queue}`,
+                  batchSize,
+                  maximumConcurrency,
+                },
               },
-            },
-          ],
-        },
-      ]),
+            ],
+          },
+        ];
+      }),
     );
   }
 

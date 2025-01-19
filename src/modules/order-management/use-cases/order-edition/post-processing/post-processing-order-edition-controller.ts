@@ -9,8 +9,8 @@ export class PostProcessingOrderEditionController extends QueueController<PostPr
   messageType = PostProcessingOrderEditionMessage;
 
   constructor(
-    @inject(TYPES.PostProcessingOrderCancelationUseCase)
-    private readonly postProcessingOrderCancelationUseCase: PostProcessingOrderEditionUseCase,
+    @inject(TYPES.PostProcessingOrderEditionUseCase)
+    private readonly postProcessingOrderEditionUseCase: PostProcessingOrderEditionUseCase,
   ) {
     super();
   }
@@ -18,7 +18,7 @@ export class PostProcessingOrderEditionController extends QueueController<PostPr
   async perform(message: PostProcessingOrderEditionMessage): Promise<void> {
     const { orderId, expirationTimestamp: expirationDate, expirationType, shares, unitValue } = message;
 
-    await this.postProcessingOrderCancelationUseCase.execute({
+    await this.postProcessingOrderEditionUseCase.execute({
       orderId,
       expirationTimestamp: expirationDate,
       expirationType,

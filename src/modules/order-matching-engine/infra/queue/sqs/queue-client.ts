@@ -13,7 +13,7 @@ export class QueueClient implements IQueueClient {
     @inject(TYPES.SQSClient)
     private readonly sqsClient: SQSClient,
   ) {
-    this.ORDER_MATCHING_QUEUE_URL = 'https://sqs.us-east-1.amazonaws.com/325495160074/OrderMatchingQueue';
+    this.ORDER_MATCHING_QUEUE_URL = 'https://sqs.us-east-1.amazonaws.com/565393064122/OrderMatchingEngineQueue';
   }
 
   async pullOrderBookMessages(): Promise<OrderBookPullResponse> {
@@ -31,9 +31,7 @@ export class QueueClient implements IQueueClient {
       data.Messages?.map(x => {
         const parsedBody = JSON.parse(x.Body ?? '{}');
 
-        const parsedMessage = JSON.parse(parsedBody.Message ?? '{}');
-
-        return { id: x.ReceiptHandle, content: parsedMessage, type: parsedBody.Subject } as OrderBookMessage;
+        return { id: x.ReceiptHandle, content: parsedBody, type: parsedBody.eventType } as OrderBookMessage;
       }) ?? [];
 
     return { messages };
