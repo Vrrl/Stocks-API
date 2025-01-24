@@ -24,8 +24,14 @@ export class CognitoService implements IAuthenticationService {
   constructor(
     @inject(TYPES.CognitoIdentityProvider) private readonly cognitoIdentityProvider: CognitoIdentityProvider,
   ) {
-    this.USER_POOL_ID = throwIfUndefinedOrEmptyString(process.env.COGNITO_USER_POOL_ID);
-    this.CLIENT_ID = throwIfUndefinedOrEmptyString(process.env.COGNITO_CLIENT_ID);
+    this.USER_POOL_ID = throwIfUndefinedOrEmptyString(
+      process.env.COGNITO_USER_POOL_ID,
+      'Env parameter is COGNITO_USER_POOL_ID required',
+    );
+    this.CLIENT_ID = throwIfUndefinedOrEmptyString(
+      process.env.COGNITO_CLIENT_ID,
+      'Env parameter is COGNITO_CLIENT_ID required',
+    );
   }
 
   async signUp(email: string, username: string, password: string, internalId: string): Promise<void> {
