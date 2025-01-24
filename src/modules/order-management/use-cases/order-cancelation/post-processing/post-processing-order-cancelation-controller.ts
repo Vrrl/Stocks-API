@@ -1,4 +1,4 @@
-import TYPES from '@src/core/types';
+import TYPES from '../../../infra/types';
 import { PostProcessingOrderCancelationUseCase } from './post-processing-order-cancelation';
 import { inject, injectable } from 'inversify/lib/inversify';
 import { QueueController } from '@src/core/infra/queue-controller';

@@ -1,4 +1,3 @@
-import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { IUseCase } from '@src/core/use-case';
 import { CoreErrors } from '@src/core/errors';
@@ -6,6 +5,7 @@ import { IOrderQueryRepository } from '@src/modules/order-management/infra/db/or
 import { IOrderCommandRepository } from '@src/modules/order-management/infra/db/order-command-repository';
 import { PostProcessingOrderEditionMessage } from './post-processing-order-edition-message';
 import { FinantialNumber } from '@src/core/domain/shared/finantial-number';
+import TYPES from '@src/modules/order-management/infra/types';
 
 interface PostProcessingOrderEditionRequest extends PostProcessingOrderEditionMessage {}
 

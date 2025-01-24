@@ -1,4 +1,3 @@
-import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { IQueueClient } from './infra/queue/queue-client';
 import { OrderBookMessage } from './dtos/order-book-message';
@@ -10,6 +9,7 @@ import { IEventNotifier } from './infra/event/event-notifier';
 import { OrderCanceledMessage } from './dtos/post-processing-message/order-canceled-message';
 import { OrderMutationFailedMessage } from './dtos/post-processing-message/order-mutation-failed-message';
 import { OrderEditedMessage } from './dtos/post-processing-message/order-edited-message';
+import TYPES from './infra/types';
 
 @injectable()
 export class Engine {

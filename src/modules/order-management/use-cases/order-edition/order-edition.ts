@@ -1,4 +1,3 @@
-import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { IUseCase } from '@src/core/use-case';
 import { OrderStatusEnum } from '../../domain/order-status-enum';
@@ -9,6 +8,7 @@ import { CoreErrors } from '@src/core/errors';
 import { OrderExpirationTypeEnum } from '../../domain/order-expiration-type-enum';
 import { FinantialNumber } from '@src/core/domain/shared/finantial-number';
 import { IOrderCommandRepository } from '../../infra/db/order-command-repository';
+import TYPES from '../../infra/types';
 
 interface OrderEditionRequest {
   shareholderId: string;

@@ -1,4 +1,3 @@
-import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { IUseCase } from '@src/core/use-case';
 import { Order } from '../../domain/order';
@@ -9,6 +8,7 @@ import { OrderExpirationTypeEnum } from '../../domain/order-expiration-type-enum
 import { IOrderCommandRepository } from '../../infra/db/order-command-repository';
 import { IEventNotifier } from '../../infra/event/event-notifier';
 import { EventNames } from '../../domain/event-names';
+import TYPES from '../../infra/types';
 
 interface OrderRegistrationRequest {
   shareholderId: string;

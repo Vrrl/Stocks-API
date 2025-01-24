@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import { Container } from 'inversify/lib/inversify';
 import { SQSClient } from '@aws-sdk/client-sqs';
-import TYPES from '@src/core/types';
 import { Engine } from '../engine';
 import { IQueueClient } from './queue/queue-client';
 import { QueueClient } from './queue/sqs/queue-client';
@@ -9,6 +8,7 @@ import { OrderBook } from '../domain/order-book';
 import { IEventNotifier } from './event/event-notifier';
 import { EventNotifier } from './event/sns/event-notifier';
 import { SNSClient } from '@aws-sdk/client-sns';
+import TYPES from './types';
 
 // Todo: add env vars
 const container = new Container();

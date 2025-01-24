@@ -1,10 +1,10 @@
-import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { IUseCase } from '@src/core/use-case';
 import { CoreErrors } from '@src/core/errors';
 import { IOrderQueryRepository } from '@src/modules/order-management/infra/db/order-query-repository';
 import { IOrderCommandRepository } from '@src/modules/order-management/infra/db/order-command-repository';
 import { PostProcessingOrderCancelationMessage } from './post-processing-order-cancelation-message';
+import TYPES from '@src/modules/order-management/infra/types';
 
 interface PostProcessingOrderCancelationRequest extends PostProcessingOrderCancelationMessage {}
 

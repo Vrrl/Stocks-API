@@ -1,8 +1,8 @@
-import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { IUseCase } from '@src/core/use-case';
 import { IAuthenticationService } from '@src/infra/authentication/services/authentication-service';
 import { v4 as uuid } from 'uuid';
+import TYPES from '@src/infra/types';
 interface SignUpRequest {
   email: string;
   username: string;

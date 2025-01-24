@@ -1,8 +1,8 @@
-import TYPES from '@src/core/types';
 import { PostProcessingOrderEditionUseCase } from './post-processing-order-edition';
 import { inject, injectable } from 'inversify/lib/inversify';
 import { QueueController } from '@src/core/infra/queue-controller';
 import { PostProcessingOrderEditionMessage } from './post-processing-order-edition-message';
+import TYPES from '@src/modules/order-management/infra/types';
 
 @injectable()
 export class PostProcessingOrderEditionController extends QueueController<PostProcessingOrderEditionMessage> {

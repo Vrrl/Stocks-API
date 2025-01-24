@@ -1,6 +1,6 @@
-import TYPES from '@src/core/types';
 import { Engine } from './engine';
 import container from './infra/injector';
+import TYPES from './infra/types';
 
 process.on('uncaughtException', err => {
   console.error('Exceção não capturada:', err);

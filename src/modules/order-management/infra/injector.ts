@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import TYPES from '@src/core/types';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { IOrderCommandRepository } from '@src/modules/order-management/infra/db/order-command-repository';
 import { OrderCommandRepository } from '@src/modules/order-management/infra/db/dynamo/order-command-repository';
@@ -15,6 +14,7 @@ import { PostProcessingOrderCancelationUseCase } from '../use-cases/order-cancel
 import { OrderEditionUseCase } from '../use-cases/order-edition/order-edition';
 import { PostProcessingOrderEditionUseCase } from '../use-cases/order-edition/post-processing/post-processing-order-edition';
 import container from '@src/infra/injector';
+import TYPES from './types';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
 const snsClient = new SNSClient({ region: process.env.REGION });

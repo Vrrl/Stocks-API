@@ -2,11 +2,11 @@ import { z } from 'zod';
 import { ok } from '@src/core/infra/helpers/http-status';
 import { HttpRequest, HttpResponse } from '@core/infra/http';
 import { HttpController, HttpControllerContext } from '@src/core/infra/http-controller';
-import TYPES from '@src/core/types';
 import { AuthenticationLevel } from '@src/core/infra/authentication/authentication-level';
 import { OrderListUseCase } from './order-list';
 import { inject, injectable } from 'inversify/lib/inversify';
 import { User } from '@src/infra/authentication/domain/user';
+import TYPES from '../../infra/types';
 
 @injectable()
 export class OrderListController extends HttpController {

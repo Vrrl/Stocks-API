@@ -1,10 +1,10 @@
-import TYPES from '@src/core/types';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
 import { Order } from '../../../domain/order';
 import { IOrderCommandRepository } from '../order-command-repository';
 import { throwIfUndefinedOrEmptyString } from '@src/core/infra/helpers/validation';
 import { inject, injectable } from 'inversify/lib/inversify';
+import TYPES from '../../types';
 
 @injectable()
 export class OrderCommandRepository implements IOrderCommandRepository {

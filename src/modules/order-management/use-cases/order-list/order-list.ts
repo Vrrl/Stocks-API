@@ -1,8 +1,8 @@
-import TYPES from '@src/core/types';
 import { IUseCase } from '@src/core/use-case';
 import { Order } from '../../domain/order';
 import { IOrderQueryRepository } from '../../infra/db/order-query-repository';
 import { inject, injectable } from 'inversify/lib/inversify';
+import TYPES from '../../infra/types';
 
 interface OrderListRequest {
   shareholderId: string;

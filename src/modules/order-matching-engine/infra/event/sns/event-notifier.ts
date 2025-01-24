@@ -1,6 +1,5 @@
 import { IEventNotifier } from '../event-notifier';
 import { inject, injectable } from 'inversify';
-import TYPES from '@src/core/types';
 import { v4 as uuid } from 'uuid';
 import {
   PublishCommand,
@@ -11,6 +10,7 @@ import {
   PublishBatchCommand,
 } from '@aws-sdk/client-sns';
 import { PostProcessingMessage } from '../post-processing-message';
+import TYPES from '../../types';
 
 @injectable()
 export class EventNotifier implements IEventNotifier {

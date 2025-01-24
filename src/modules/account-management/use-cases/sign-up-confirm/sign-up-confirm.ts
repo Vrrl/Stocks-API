@@ -1,7 +1,7 @@
-import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { IUseCase } from '@src/core/use-case';
 import { IAuthenticationService } from '@src/infra/authentication/services/authentication-service';
+import TYPES from '@src/infra/types';
 
 interface SignUpConfirmRequest {
   username: string;

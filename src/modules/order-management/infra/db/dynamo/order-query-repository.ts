@@ -1,4 +1,3 @@
-import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { DynamoDBClient, QueryCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { Order } from '../../../domain/order';
@@ -6,6 +5,7 @@ import { throwIfUndefinedOrEmptyString } from '@src/core/infra/helpers/validatio
 import { IOrderQueryRepository } from '../order-query-repository';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { OrderMap } from './mappers/order-map';
+import TYPES from '../../types';
 
 @injectable()
 export class OrderQueryRepository implements IOrderQueryRepository {

@@ -1,4 +1,3 @@
-import TYPES from '@src/core/types';
 import { inject, injectable } from 'inversify';
 import { IUseCase } from '@src/core/use-case';
 import { OrderStatusEnum } from '../../domain/order-status-enum';
@@ -7,6 +6,7 @@ import { EventNames } from '../../domain/event-names';
 import { IOrderQueryRepository } from '../../infra/db/order-query-repository';
 import { CoreErrors } from '@src/core/errors';
 import { IOrderCommandRepository } from '../../infra/db/order-command-repository';
+import TYPES from '../../infra/types';
 
 interface OrderCancelationRequest {
   shareholderId: string;

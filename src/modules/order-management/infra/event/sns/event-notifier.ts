@@ -1,8 +1,8 @@
 import { EventNames } from '@src/modules/order-management/domain/event-names';
 import { IEventNotifier } from '../event-notifier';
 import { inject, injectable } from 'inversify';
-import TYPES from '@src/core/types';
 import { PublishCommand, PublishCommandInput, SNSClient } from '@aws-sdk/client-sns';
+import TYPES from '../../types';
 
 @injectable()
 export class EventNotifier implements IEventNotifier {
