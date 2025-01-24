@@ -1,7 +1,5 @@
 import 'reflect-metadata';
-import * as providerEnv from '@modules/order-management/infra/serverless/environment';
 import { Container } from 'inversify/lib/inversify';
-import { loadEnvFromDictionary } from '@src/core/utils/loadEnvFromDictionary';
 import { SQSClient } from '@aws-sdk/client-sqs';
 import TYPES from '@src/core/types';
 import { Engine } from '../engine';
@@ -12,8 +10,7 @@ import { IEventNotifier } from './event/event-notifier';
 import { EventNotifier } from './event/sns/event-notifier';
 import { SNSClient } from '@aws-sdk/client-sns';
 
-loadEnvFromDictionary(providerEnv);
-
+// Todo: add env vars
 const container = new Container();
 
 const sqsClient = new SQSClient({ region: 'us-east-1' });

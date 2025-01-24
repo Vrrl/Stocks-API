@@ -1,0 +1,6 @@
+NODE_ENV: "${env:STAGE, 'local'}"
+NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000'
+AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
+
+SNS_ORDER_PROCESS_TOPIC_ARN: arn:aws:sns:${self:provider.environment.REGION}:${self:provider.environment.ACCOUNT_ID}:OrderProcessTopic
+DYNAMO_ORDERS_TABLE: 'Orders'

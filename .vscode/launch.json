@@ -13,7 +13,43 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "Serverless local Order Management",
+      "name": "API staging Order Management",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "yarn",
+      "args": ["staging:order-management"],
+      "runtimeArgs": ["--inspect=9229"],
+      "autoAttachChildProcesses": true,
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "API staging Account Management",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "yarn",
+      "args": ["staging:account-management"],
+      "runtimeArgs": ["--inspect=9230"],
+      "autoAttachChildProcesses": true,
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "API staging Order Book",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "yarn",
+      "args": ["staging:order-matching-engine"],
+      "runtimeArgs": ["--inspect=9231"],
+      "autoAttachChildProcesses": true,
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "API local Order Management",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "yarn",
@@ -25,7 +61,7 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "Serverless local Account Management",
+      "name": "API local Account Management",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "yarn",
@@ -37,7 +73,7 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "Serverless local Order Book",
+      "name": "API local Order Book",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "yarn",
@@ -51,12 +87,13 @@
   ],
   "compounds": [
     {
-      "name": "Serverless local All",
-      "configurations": [
-        "Serverless local Order Management",
-        "Serverless local Account Management",
-        "Serverless local Order Book"
-      ],
+      "name": "API Local All",
+      "configurations": ["API local Order Management", "API local Account Management", "API local Order Book"],
+      "stopAll": true
+    },
+    {
+      "name": "API Staging All",
+      "configurations": ["API staging Order Management", "API staging Account Management", "API staging Order Book"],
       "stopAll": true
     }
   ]

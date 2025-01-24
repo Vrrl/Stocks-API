@@ -1,0 +1,3 @@
+NODE_ENV: "${env:STAGE, 'local'}"
+NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000'
+AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'

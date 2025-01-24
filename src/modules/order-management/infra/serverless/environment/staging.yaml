@@ -1,0 +1,5 @@
+REGION: 'us-east-1'
+ACCOUNT_ID: '565393064122'
+
+COGNITO_USER_POOL_ID: 'us-east-1_486tKZZtz'
+COGNITO_CLIENT_ID: '3ejh10cqhu7rpnsbivkiqkmq'

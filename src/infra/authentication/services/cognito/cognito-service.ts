@@ -1,5 +1,4 @@
 import { IAuthenticationService } from '../authentication-service';
-import TYPES from '@src/core/types';
 import {
   CognitoIdentityProvider,
   ConfirmSignUpCommandInput,
@@ -15,6 +14,7 @@ import { throwIfNotBoolean, throwIfUndefinedOrEmptyString } from '@src/core/infr
 import { inject, injectable } from 'inversify/lib/inversify';
 import { IOAuthToken } from '../../dtos/oauth-token';
 import { User } from '@src/infra/authentication/domain/user';
+import TYPES from '@src/infra/types';
 
 @injectable()
 export class CognitoService implements IAuthenticationService {
@@ -24,11 +24,8 @@ export class CognitoService implements IAuthenticationService {
   constructor(
     @inject(TYPES.CognitoIdentityProvider) private readonly cognitoIdentityProvider: CognitoIdentityProvider,
   ) {
-    // Only if variables have been setup already #TODO: remover isso, ja arrumei
-    if (process.env.NODE_ENV) {
-      this.USER_POOL_ID = throwIfUndefinedOrEmptyString(process.env.COGNITO_USER_POOL_ID);
-      this.CLIENT_ID = throwIfUndefinedOrEmptyString(process.env.COGNITO_CLIENT_ID);
-    }
+    this.USER_POOL_ID = throwIfUndefinedOrEmptyString(process.env.COGNITO_USER_POOL_ID);
+    this.CLIENT_ID = throwIfUndefinedOrEmptyString(process.env.COGNITO_CLIENT_ID);
   }
 
   async signUp(email: string, username: string, password: string, internalId: string): Promise<void> {

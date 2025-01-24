@@ -4,12 +4,15 @@
   "description": "",
   "main": "serverless.ts",
   "scripts": {
-    "deploy:all": "sls deploy",
-    "deploy:account-management": "sls account-management:deploy",
-    "deploy:order-management": "sls order-management:deploy",
-    "local:order-management": "sls order-management:offline --stage local start",
-    "local:account-management": "sls account-management:offline --stage local start",
-    "local:order-matching-engine": "ts-node ./src/modules/order-matching-engine/index.ts",
+    "deploy:staging:all": "cross-env STAGE=staging sls deploy --stage=staging",
+    "deploy:staging:account-management": "cross-env STAGE=staging sls account-management:deploy",
+    "deploy:staging:order-management": "cross-env STAGE=staging sls order-management:deploy",
+    "staging:order-management": "cross-env STAGE=staging sls order-management:offline --stage=staging start",
+    "staging:account-management": "cross-env STAGE=staging sls account-management:offline --stage=staging start",
+    "staging:order-matching-engine": "cross-env STAGE=staging ts-node ./src/modules/order-matching-engine/index.ts",
+    "local:order-management": "cross-env STAGE=local sls order-management:offline --stage=local start",
+    "local:account-management": "cross-env STAGE=local sls account-management:offline --stage local start",
+    "local:order-matching-engine": "cross-env STAGE=local ts-node ./src/modules/order-matching-engine/index.ts",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
@@ -52,6 +55,7 @@
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
     "@vitest/coverage-v8": "^1.5.0",
+    "cross-env": "^7.0.3",
     "esbuild": "^0.20.1",
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
@@ -67,7 +71,8 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.3",
     "vitest": "^1.6.0",
-    "vitest-mock-extended": "^1.2.1"
+    "vitest-mock-extended": "^1.2.1",
+    "yaml": "^2.7.0"
   },
   "author": "Gabriel Verle",
   "license": "MIT"

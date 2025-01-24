@@ -3,11 +3,11 @@ import * as httpStatus from './helpers/http-status';
 import { z } from 'zod';
 import { injectable } from 'inversify';
 import { AuthenticationLevel } from './authentication/authentication-level';
-import TYPES from '../types';
 import { IAuthenticationService } from '@src/infra/authentication/services/authentication-service';
 import { User } from '@src/infra/authentication/domain/user';
 import container from '@src/modules/account-management/infra/injector';
 import { UseCaseError, ValidationError } from '../errors';
+import TYPES from '@src/infra/types';
 
 export type HttpControllerContext = { user?: User };
 
@@ -17,14 +17,8 @@ export abstract class HttpController {
 
   authenticationLevels?: AuthenticationLevel[];
 
-  hasAuthentication: boolean;
-
   constructor() {
     this.authenticationService = container.get<IAuthenticationService>(TYPES.IAuthenticationService);
-
-    if (this.authenticationLevels?.length) {
-      this.hasAuthentication = true;
-    }
   }
 
   abstract get requestSchema(): z.AnyZodObject | undefined;
@@ -35,14 +29,21 @@ export abstract class HttpController {
       const context: HttpControllerContext = {};
 
       if (this.authenticationLevels?.length) {
-        try {
-          const user = await this.authenticationService.getUserByToken(httpRequest.headers?.authorization);
-          if (!user) return httpStatus.Unauthorized();
-          context.user = user;
-        } catch (error: any) {
-          if (error.name === 'NotAuthorizedException') return httpStatus.Unauthorized('Access Token has expired');
-          console.log(error);
-          return httpStatus.serverError();
+        if (process.env.NODE_ENV === 'local') {
+          context.user = new User(
+            { email: 'local@local.com', emailVerified: true, externalId: '000000', username: 'localuser' },
+            '000000',
+          );
+        } else {
+          try {
+            const user = await this.authenticationService.getUserByToken(httpRequest.headers?.authorization);
+            if (!user) return httpStatus.Unauthorized();
+            context.user = user;
+          } catch (error: any) {
+            if (error.name === 'NotAuthorizedException') return httpStatus.Unauthorized('Access Token has expired');
+            console.log(error);
+            return httpStatus.serverError();
+          }
         }
       }
 

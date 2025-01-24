@@ -1,7 +1,8 @@
 import type { AWS } from '@serverless/typescript';
 import functions from '@src/modules/order-management/infra/serverless/functions';
 import iam from '@src/modules/order-management/infra/serverless/iam';
-import * as environment from '@src/modules/order-management/infra/serverless/environment';
+import { readFileSync } from 'fs';
+import * as yaml from 'yaml';
 
 const serverlessConfiguration: AWS = {
   service: 'OM',
@@ -10,6 +11,7 @@ const serverlessConfiguration: AWS = {
   provider: {
     name: 'aws',
     runtime: 'nodejs20.x',
+    stage: "${env:STAGE, 'local'}",
     deploymentMethod: 'direct',
     versionFunctions: false,
     timeout: 900,
@@ -20,7 +22,10 @@ const serverlessConfiguration: AWS = {
     httpApi: {
       cors: true,
     },
-    environment,
+    environment: {
+      ...yaml.parse(readFileSync('./infra/serverless/environment/global.yaml', 'utf8')),
+      ...yaml.parse(readFileSync(`./infra/serverless/environment/${process.env.STAGE || 'local'}.yaml`, 'utf8')),
+    },
     iam,
   },
   functions,

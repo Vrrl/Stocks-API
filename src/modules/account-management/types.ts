@@ -1,4 +1,7 @@
 const TYPES = {
+  // Resources
+  // Services
+  // Repos
   // UseCases
   SignUpUseCase: Symbol.for('SignUpUseCase'),
   SignUpConfirmUseCase: Symbol.for('SignUpConfirmUseCase'),
