@@ -15,6 +15,8 @@ const TYPES = {
   OrderCancelationUseCase: Symbol.for('OrderCancelationUseCase'),
   PostProcessingOrderCancelationUseCase: Symbol.for('PostProcessingOrderCancelationUseCase'),
   PostProcessingOrderEditionUseCase: Symbol.for('PostProcessingOrderEditionUseCase'),
+  PostProcessingOrderExecutedUseCase: Symbol.for('PostProcessingOrderExecutedUseCase'),
+  PostProcessingOrderExpiredUseCase: Symbol.for('PostProcessingOrderExpiredUseCase'),
   OrderEditionUseCase: Symbol.for('OrderEditUseCase'),
   OrderRegistrationUseCase: Symbol.for('OrderRegistrationUseCase'),
   OrderListUseCase: Symbol.for('OrderListUseCase'),

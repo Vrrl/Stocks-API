@@ -1,8 +1,8 @@
-import TYPES from '../../../infra/types';
 import { PostProcessingOrderCancelationUseCase } from './post-processing-order-cancelation';
 import { inject, injectable } from 'inversify/lib/inversify';
 import { QueueController } from '@src/core/infra/queue-controller';
 import { PostProcessingOrderCancelationMessage } from './post-processing-order-cancelation-message';
+import TYPES from '../../infra/types';
 
 @injectable()
 export class PostProcessingOrderCancelationController extends QueueController<PostProcessingOrderCancelationMessage> {

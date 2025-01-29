@@ -10,11 +10,13 @@ import { OrderListUseCase } from '../use-cases/order-list/order-list';
 import { IOrderQueryRepository } from './db/order-query-repository';
 import { OrderQueryRepository } from './db/dynamo/order-query-repository';
 import { OrderCancelationUseCase } from '../use-cases/order-cancelation/order-cancelation';
-import { PostProcessingOrderCancelationUseCase } from '../use-cases/order-cancelation/post-processing/post-processing-order-cancelation';
 import { OrderEditionUseCase } from '../use-cases/order-edition/order-edition';
-import { PostProcessingOrderEditionUseCase } from '../use-cases/order-edition/post-processing/post-processing-order-edition';
+import { PostProcessingOrderEditionUseCase } from '../use-cases/post-processing-order-edition/post-processing-order-edition';
 import container from '@src/infra/injector';
 import TYPES from './types';
+import { PostProcessingOrderCancelationUseCase } from '../use-cases/post-processing-order-cancelation/post-processing-order-cancelation';
+import { PostProcessingOrderExecutedUseCase } from '../use-cases/post-processing-order-executed/post-processing-order-executed';
+import { PostProcessingOrderExpiredUseCase } from '../use-cases/post-processing-order-expired/post-processing-order-expired';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
 const snsClient = new SNSClient({ region: process.env.REGION });
@@ -38,6 +40,12 @@ container
 container
   .bind<PostProcessingOrderEditionUseCase>(TYPES.PostProcessingOrderEditionUseCase)
   .to(PostProcessingOrderEditionUseCase);
+container
+  .bind<PostProcessingOrderExecutedUseCase>(TYPES.PostProcessingOrderExecutedUseCase)
+  .to(PostProcessingOrderExecutedUseCase);
+container
+  .bind<PostProcessingOrderExpiredUseCase>(TYPES.PostProcessingOrderExpiredUseCase)
+  .to(PostProcessingOrderExpiredUseCase);
 container.bind<OrderRegistrationUseCase>(TYPES.OrderRegistrationUseCase).to(OrderRegistrationUseCase);
 container.bind<OrderListUseCase>(TYPES.OrderListUseCase).to(OrderListUseCase);
 

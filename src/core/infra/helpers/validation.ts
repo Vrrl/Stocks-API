@@ -36,3 +36,10 @@ export const throwIfNotNumber = (target: any, errorMessage?: string): number => 
   }
   return target;
 };
+
+export const throwIfNotArray = <T = any>(target: any, errorMessage?: string): T[] => {
+  if (!Array.isArray(target)) {
+    throw new Error(errorMessage || `Expected target variable to be a valid array, got ${typeof target}.`);
+  }
+  return target;
+};

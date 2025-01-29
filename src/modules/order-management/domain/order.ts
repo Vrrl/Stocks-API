@@ -154,6 +154,18 @@ export class Order extends AggregateRoot<OrderProps> {
     );
   }
 
+  markAsExpired() {
+    this.props.status = OrderStatusEnum.Expired;
+
+    return this;
+  }
+
+  markAsFilled(filledType: OrderStatusEnum.PartiallyFilled | OrderStatusEnum.Filled) {
+    this.props.status = filledType;
+
+    return this;
+  }
+
   markAsPendingCancelation() {
     this.props.hasPendingCancelation = true;
 

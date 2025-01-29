@@ -40,3 +40,15 @@ variable "post_processing_order_edition_queue_name" {
   type        = string
   default     = "PostProcessingOrderEditionQueue"
 }
+
+variable "post_processing_order_executed_queue_name" {
+  description = "SQS Post Processing Order Executed Queue Name"
+  type        = string
+  default     = "PostProcessingOrderExecutedQueue"
+}
+
+variable "post_processing_order_expired_queue_name" {
+  description = "SQS Post Processing Order Expired Queue Name"
+  type        = string
+  default     = "PostProcessingOrderExpiredQueue"
+}

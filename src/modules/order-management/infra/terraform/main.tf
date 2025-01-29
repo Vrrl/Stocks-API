@@ -108,3 +108,79 @@ resource "aws_sqs_queue_policy" "post_processing_order_edition_policy" {
     ]
   })
 }
+
+resource "aws_sqs_queue" "post_processing_order_executed_queue" {
+  name                       = var.post_processing_order_executed_queue_name
+  visibility_timeout_seconds = 900
+}
+
+resource "aws_sns_topic_subscription" "post_processing_order_executed_subscription" {
+  topic_arn = var.sns_matching_engine_topic_arn
+  protocol  = "sqs"
+  endpoint  = aws_sqs_queue.post_processing_order_executed_queue.arn
+
+  raw_message_delivery = true
+
+  filter_policy = jsonencode({
+    eventType = ["ORDER_MATCH"]
+  })
+}
+
+resource "aws_sqs_queue_policy" "post_processing_order_executed_policy" {
+  queue_url = aws_sqs_queue.post_processing_order_executed_queue.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect    = "Allow",
+        Principal = { Service = "sns.amazonaws.com" },
+        Action    = "SQS:SendMessage",
+        Resource  = aws_sqs_queue.post_processing_order_executed_queue.arn,
+        Condition = {
+          ArnEquals = {
+            "aws:SourceArn" = var.sns_matching_engine_topic_arn
+          }
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_sqs_queue" "post_processing_order_expired_queue" {
+  name                       = var.post_processing_order_expired_queue_name
+  visibility_timeout_seconds = 900
+}
+
+resource "aws_sns_topic_subscription" "post_processing_order_expired_subscription" {
+  topic_arn = var.sns_matching_engine_topic_arn
+  protocol  = "sqs"
+  endpoint  = aws_sqs_queue.post_processing_order_expired_queue.arn
+
+  raw_message_delivery = true
+
+  filter_policy = jsonencode({
+    eventType = ["ORDER_EXPIRED"]
+  })
+}
+
+resource "aws_sqs_queue_policy" "post_processing_order_expired_policy" {
+  queue_url = aws_sqs_queue.post_processing_order_expired_queue.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect    = "Allow",
+        Principal = { Service = "sns.amazonaws.com" },
+        Action    = "SQS:SendMessage",
+        Resource  = aws_sqs_queue.post_processing_order_expired_queue.arn,
+        Condition = {
+          ArnEquals = {
+            "aws:SourceArn" = var.sns_matching_engine_topic_arn
+          }
+        }
+      }
+    ]
+  })
+}
