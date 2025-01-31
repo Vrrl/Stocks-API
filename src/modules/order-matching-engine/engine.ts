@@ -20,7 +20,13 @@ export class Engine {
     private readonly eventNotifier: IEventNotifier,
     @inject(TYPES.OrderBook)
     private readonly orderBook: OrderBook,
-  ) {}
+  ) {
+    this.loadSnapshot();
+  }
+
+  public saveSnapshot() {}
+
+  private loadSnapshot() {}
 
   private processOrderCreated(content: unknown) {
     const { order } = MessageContentParser.parseOrderCreated(content);
